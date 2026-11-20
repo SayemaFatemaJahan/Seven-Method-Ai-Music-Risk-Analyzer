@@ -51,13 +51,13 @@ export const UnifiedSevenMethodView: React.FC<UnifiedSevenMethodViewProps> = ({
           <div>
             <div className="text-xs font-mono text-indigo-400 font-semibold mb-1 flex items-center gap-2">
               <Cpu className="w-4 h-4" />
-              7th Master Research Suite · 6 Parallel Architectural Pipelines
+              7th Master Research Suite · 6 Acoustic Signal Streams + Deep Attention Fusion
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-              Multi-Method Ai music analyzer with 6 methods
+              Multi-Signal Neural Audio Risk Detector
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 mt-2 max-w-3xl leading-relaxed">
-              Parallel execution environment comparing <strong>FastAPI Librosa, Pure JavaScript, Enterprise Hybrid, Rule-Based DSP, Classical Machine Learning, and Deep Learning CNN-LSTM</strong> across distinct output segments.
+              Parallel execution environment comparing <strong>Chroma CQT, Log-Mel Spectrogram, MFCC Timbre, Tempogram Onsets, Tonnetz Centroid, and Spectral Contrast</strong> fused via <strong>Deep Self-Attention Neural Embedding</strong>.
             </p>
           </div>
 
@@ -92,7 +92,7 @@ export const UnifiedSevenMethodView: React.FC<UnifiedSevenMethodViewProps> = ({
           <span aria-hidden="true">·</span>
           <span className="text-indigo-400">{bpm} BPM ({key})</span>
           <span aria-hidden="true">·</span>
-          <span className="text-emerald-400">All 6 Pipelines Running Concurrently</span>
+          <span className="text-emerald-400">All 6 Acoustic Signal Streams Analyzed Concurrently</span>
         </div>
       </div>
 

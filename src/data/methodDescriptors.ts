@@ -4,140 +4,141 @@ export const METHOD_DESCRIPTORS: Record<string, MethodDescriptor> = {
   method1: {
     id: 'method1',
     methodNumber: 1,
-    officialName: 'AcousticPulse PyBridge',
-    tagline: 'Python AI Backend + React Frontend (FastAPI & Librosa REST Architecture)',
-    techStackFrontend: ['React 19', 'TypeScript', 'Tailwind CSS', 'Axios / Web Audio API'],
-    techStackBackend: ['Python 3.11', 'FastAPI', 'Librosa', 'NumPy', 'Scikit-learn', 'Uvicorn'],
-    aiType: 'Python FastAPI + React',
-    description: 'Industry-standard decoupled web architecture. The React frontend handles user audio uploading and visual waveform graphs, while a Python FastAPI server runs Librosa for Mel-frequency cepstral coefficients (MFCCs), spectral centroid, and harmonic chroma extraction.',
+    officialName: 'Chroma CQT Harmonic Analyzer',
+    tagline: 'Harmonic & Melodic Plagiarism Detection via 12-Class Constant-Q Pitch Profiling',
+    techStackFrontend: ['React 19', 'TypeScript', 'Tailwind CSS', 'Harmonic Pitch Visualizer'],
+    techStackBackend: ['Python 3.11', 'Librosa CQT', 'NumPy', 'PyTorch'],
+    aiType: 'Chroma Harmonic Analysis',
+    description: 'Analyzes 12-dimensional pitch chroma distributions invariant to octave and instrumentation. Detects melodic copying, re-recorded covers, and stolen chord progressions even when played on different synthesizers or traditional instruments.',
     pros: [
-      'Access to Python scientific ecosystem (Librosa, SciPy, TorchAudio)',
-      'Clear separation of concerns between UI and audio DSP',
-      'Scalable to multi-worker GPU background task queues (Celery/Redis)'
+      'Invariant to instrument timbre, octave shifts, and vocal registers',
+      'Accurately flags re-recorded melody covers and stolen chord sequences',
+      'Provides clear musical explainability for copyright arbitration'
     ],
     cons: [
-      'Requires running two servers (Python port 8000 + React port 3000)',
-      'Uploading multi-megabyte WAV files over the network adds latency'
+      'Cannot detect rhythm-only or drum sample theft by itself',
+      'Requires complementary timbral signals to verify vocal stem identity'
     ],
-    academicUsefulness: 'Most common professional architecture in commercial audio startups and university research labs.'
+    academicUsefulness: 'Primary acoustic signal for establishing melodic and compositional copyright infringement in musicology.'
   },
   method2: {
     id: 'method2',
     methodNumber: 2,
-    officialName: 'BrowserSonic JS',
-    tagline: 'Pure JavaScript / TypeScript In-Browser Engine (Web Audio API & TensorFlow.js)',
-    techStackFrontend: ['React 19', 'TypeScript', 'W3C Web Audio API', 'TensorFlow.js', 'WebCrypto'],
-    techStackBackend: ['Zero Backend Required (100% Client-Side Private In-Browser)'],
-    aiType: 'Pure JS / TensorFlow.js',
-    description: 'Completely serverless architecture. Audio files never leave the artist\'s browser. Uses the W3C Web Audio API to decode PCM audio frames, computes real-time FFT, and executes lightweight neural embeddings in WebGL/WebGPU.',
+    officialName: 'Log-Mel Spectrogram Neural Stream',
+    tagline: 'Deep Time-Frequency Acoustic Signature via 128-Band Perceptual Filtering',
+    techStackFrontend: ['React 19', 'TypeScript', 'Tailwind CSS', 'Spectrogram Heatmap'],
+    techStackBackend: ['Python 3.11', 'PyTorch Torchaudio', 'Librosa Mel', 'CUDA'],
+    aiType: 'Log-Mel Spectrogram CNN',
+    description: 'Transforms raw audio into high-resolution 128-band Mel scale representations modeled after human auditory perception. Captures structural energy distributions across time and feeds a 2D convolutional feature extraction stream.',
     pros: [
-      '100% privacy: unreleased music never leaves the artist\'s computer',
-      'Zero server hosting costs and zero network latency',
-      'Instantaneous waveform scrubbing and canvas rendering'
+      'Captures holistic time-frequency audio fingerprint simultaneously',
+      'Naturally compatible with modern 2D Convolutional Neural Networks',
+      'Robust against subtle background noise and compression artifacts'
     ],
     cons: [
-      'Limited to browser memory (cannot load massive 5GB PyTorch checkpoints)',
-      'Fewer ready-made audio research packages compared to Python Librosa'
+      'High dimensionality requires neural dimensionality reduction',
+      'Sensitive to master volume normalization differences if unscaled'
     ],
-    academicUsefulness: 'Ideal for client-side privacy-first audio tooling and serverless PWA deployments.'
+    academicUsefulness: 'Standard baseline spectral signal used across modern ISMIR deep representation learning papers.'
   },
   method3: {
     id: 'method3',
     methodNumber: 3,
-    officialName: 'SoundVault Hybrid',
-    tagline: 'Enterprise Hybrid: React UI + Python FastAPI + PostgreSQL/MongoDB Database',
-    techStackFrontend: ['React 19', 'TypeScript', 'Tailwind CSS', 'TanStack Query'],
-    techStackBackend: ['Python 3.11', 'FastAPI', 'PostgreSQL / MongoDB', 'SQLAlchemy / Motor', 'Librosa'],
-    aiType: 'Hybrid Microservice',
-    description: 'Production enterprise system combining React UI, a Python AI engine, and a relational/document database indexing 1,000+ authorized Bangladeshi songs with precomputed spectral vectors and ISRC metadata for sub-millisecond querying.',
+    officialName: 'MFCC Timbral Stem Discriminator',
+    tagline: 'Timbre, Vocal Formants & Sample Clearance via 20 Mel-Frequency Cepstral Coefficients',
+    techStackFrontend: ['React 19', 'TypeScript', 'Tailwind CSS', 'Timbre Radar'],
+    techStackBackend: ['Python 3.11', 'Librosa MFCC', 'SciPy Signal', 'FastAPI'],
+    aiType: 'MFCC Timbre Analysis',
+    description: 'Isolates the unique acoustic timbre and formant envelope of instruments and vocalists using 20 cepstral coefficients. Specifically engineered to flag direct audio stem sampling, vocal cloning, and identical synthesizer presets.',
     pros: [
-      'Pre-indexed database allows querying 1,000 songs in under 25 milliseconds',
-      'Persistent storage for artist clearance certificates and dispute history',
-      'Enterprise role-based access control (RBAC) and audit logging'
+      'Extremely sensitive to vocal identity, singer formants, and microphone color',
+      'Highest accuracy for detecting direct uncredited master stem sampling',
+      'Compact feature representation allows sub-millisecond distance metrics'
     ],
     cons: [
-      'High architectural complexity (Frontend + API + DB + Worker)',
-      'Requires database schema migrations and indexing maintenance'
+      'Can produce false positives on shared DAW synthesizer factory presets',
+      'De-biasing filters required for common royalty-free background loops'
     ],
-    academicUsefulness: 'Exactly what professors and software enterprise review boards look for in full-stack AI applications.'
+    academicUsefulness: 'Crucial for music forensic engineering and automated sample-clearance verification.'
   },
   method4: {
     id: 'method4',
     methodNumber: 4,
-    officialName: 'RuleHarmonic DSP',
-    tagline: 'Rule-Based Copyright Detector (Deterministic DSP Thresholds, No AI/ML)',
-    techStackFrontend: ['React 19', 'TypeScript', 'Tailwind CSS'],
-    techStackBackend: ['Python 3.11', 'Librosa', 'NumPy', 'SciPy Signal (Pure Math / No ML)'],
-    aiType: 'Deterministic Rules (No AI)',
-    description: 'Traditional deterministic audio engineering. Compares mathematical thresholds across Tempo (BPM delta <= 2%), Pitch Chroma overlap (>80%), and Spectral Flux. Does NOT use any neural networks or trained machine learning models.',
+    officialName: 'Tempogram & Metric Onset Analyzer',
+    tagline: 'Rhythm, Beat Grid & Drum Loop Duplication via Dynamic Onset Envelope',
+    techStackFrontend: ['React 19', 'TypeScript', 'Tailwind CSS', 'BPM Pulse Monitor'],
+    techStackBackend: ['Python 3.11', 'Librosa Tempogram', 'NumPy', 'SciPy'],
+    aiType: 'Tempogram Metric Analysis',
+    description: 'Constructs multi-scale onset correlation matrices to assess tempo, groove synchronization, and drum cadence. Differentiates between shared generic tempos and identical copyrighted drum loop syncopations.',
     pros: [
-      '100% transparent and explainable: every decision is a simple IF/THEN threshold',
-      'Zero training data or model weights needed',
-      'Extremely fast computational execution'
+      'Discloses identical drum groove swing, subdivisions, and syncopation patterns',
+      'Tempo-invariant metric correlation through cyclic tempogram analysis',
+      'Exposes rhythmic plagiarism independent of key or pitch alterations'
     ],
     cons: [
-      'Extremely vulnerable to false claims: flags 28% match on Cakewalk Koto beats because the mathematical loop peaks align!',
-      'Fails on subtle melodic variations, pitch shifting, or tempo stretching'
+      'Standard 4/4 pop drum beats can score high baseline rhythmic similarity',
+      'Requires melodic and harmonic context to avoid flagging generic grooves'
     ],
-    academicUsefulness: 'Essential as a baseline control group in your thesis to demonstrate why rule-based systems generate excessive false claims.'
+    academicUsefulness: 'Essential signal for evaluating beat theft claims in modern Hip-Hop, Pop, and EDM productions.'
   },
   method5: {
     id: 'method5',
     methodNumber: 5,
-    officialName: 'FeatureNet ML',
-    tagline: 'Machine Learning Copyright Detector (Random Forest, SVM & k-NN Classifiers)',
-    techStackFrontend: ['React 19', 'TypeScript', 'Tailwind CSS', 'Recharts'],
-    techStackBackend: ['Python 3.11', 'Scikit-learn', 'Librosa', 'NumPy', 'Pandas'],
-    aiType: 'Classical Machine Learning',
-    description: 'Classical feature-engineered artificial intelligence. Extracts 26 audio features per frame (13 MFCC coefficients, Spectral Rolloff, Zero-Crossing Rate, Chroma Energy) and feeds them into trained Random Forest (100 estimators) and Support Vector Machine (RBF kernel) classifiers.',
+    officialName: 'Tonnetz Tonal Centroid Mapper',
+    tagline: 'Harmonic Vector Space Projection (Chords, 5ths & 3rds Circles)',
+    techStackFrontend: ['React 19', 'TypeScript', 'Tailwind CSS', 'Tonal Space Chart'],
+    techStackBackend: ['Python 3.11', 'Librosa Tonnetz', 'PyTorch', 'NumPy'],
+    aiType: 'Tonnetz Tonal Centroid',
+    description: 'Projects harmonic pitch chroma into a 6-dimensional tonal centroid space representing fifths, minor thirds, and major thirds. Detects harmonic sequence theft and key modulation plagiarism invariant to transposition.',
     pros: [
-      'Significantly more robust than rule-based systems',
-      'Outputs probabilistic confidence scores based on statistical ensemble voting',
-      'Interpretable feature importance (e.g. MFCC 2 vs Chroma 7)'
+      'Transposition-invariant: detects borrowed chord progressions even if pitched up or down',
+      'Geometric representation of tonal harmony based on Euler lattice theory',
+      'High accuracy on complex classical and modal compositions'
     ],
     cons: [
-      'Still somewhat prone to false positives on repetitive stock beats if background loops dominate the MFCC summary',
-      'Requires manual feature engineering rather than learning from raw waveforms'
+      'Low sensitivity to percussive transients or rhythmic deviations',
+      'Computationally dependent on high-fidelity harmonic separation'
     ],
-    academicUsefulness: 'Classic machine learning paradigm taught in university Data Science and Audio AI courses.'
+    academicUsefulness: 'Theoretical musicology foundation for proving non-coincidental harmonic progression imitation.'
   },
   method6: {
     id: 'method6',
     methodNumber: 6,
-    officialName: 'DeepSpectra AI',
-    tagline: 'Deep Learning Copyright Detector (2D Mel-CNN & Bi-LSTM Attention Network)',
-    techStackFrontend: ['React 19', 'TypeScript', 'Tailwind CSS'],
-    techStackBackend: ['Python 3.11', 'PyTorch / TensorFlow', 'Torchaudio', 'Demucs (Stem Separation)'],
-    aiType: 'Deep Learning (CNN/LSTM)',
-    description: 'State-of-the-art deep representation learning. Converts raw audio into 128-band Mel-Spectrograms, applies 2D Convolutional layers with Residual connections to extract spatial acoustic patterns, followed by a Bidirectional LSTM with Multi-Head Self-Attention. Incorporates vocal stem isolation.',
+    officialName: 'Spectral Contrast & Texture Stream',
+    tagline: 'Dynamic Valley-to-Peak Energy & Acoustic Brightness Analysis',
+    techStackFrontend: ['React 19', 'TypeScript', 'Tailwind CSS', 'Spectral Flux Scope'],
+    techStackBackend: ['Python 3.11', 'Librosa Spectral Contrast', 'NumPy'],
+    aiType: 'Spectral Contrast Dynamics',
+    description: 'Evaluates the ratio between harmonic peaks and noise-floor valleys across 7 sub-bands. Determines audio mastering brightness, sound design identity, and production texture matches.',
     pros: [
-      'Lowest false positive rate (1.2%): learns to isolate vocal melodies from background loops',
-      'Immune to time-stretching, key shifting, and subtle acoustic noise',
-      'Learns hierarchical features directly from spectrograms without manual engineering'
+      'Distinguishes between acoustic instruments and harsh synthetic wall-of-sound textures',
+      'Robust indicator of shared audio mastering and dynamic processing profiles',
+      'Highly complementary to MFCC for acoustic texture classification'
     ],
     cons: [
-      'Computationally heavy: requires GPU or optimized ONNX runtime for sub-second inference',
-      'Black-box neural representations require gradient-weighted class activation mapping (Grad-CAM) to explain'
+      'Vulnerable to aggressive multiband compression or radio remastering',
+      'Must be combined with pitch and tempo signals for conclusive verdicts'
     ],
-    academicUsefulness: 'Modern research publication standard used in cutting-edge Music Information Retrieval (ISMIR).'
+    academicUsefulness: 'Demonstrates deep audio production forensic analysis in multi-feature research.'
   },
   method7_unified: {
     id: 'method7_unified',
     methodNumber: 7,
-    officialName: 'Multi-Method Ai music analyzer with 6 methods',
-    tagline: 'Unified Master Meta-Suite: Parallel Execution & Segmented Cross-Evaluation',
-    techStackFrontend: ['React 19', 'TypeScript', 'Tailwind CSS', 'Web Audio API'],
-    techStackBackend: ['Hybrid Polyglot: Python FastAPI + Scikit-Learn + PyTorch + WebCrypto Ed25519'],
-    aiType: 'Multi-Method Ensemble',
-    description: 'The definitive research platform. Simultaneously feeds the input audio through all 6 methodologies in parallel, rendering 6 distinct output segments side-by-side so independent artists and researchers can see exactly how each algorithm handles stock DAW beats, covers, and original master recordings.',
+    officialName: 'Multi-Signal Deep Attention Fusion',
+    tagline: 'Master Multi-Branch Neural Architecture: Self-Attention Joint Metric Embedding',
+    techStackFrontend: ['React 19', 'TypeScript', 'Tailwind CSS', 'Multi-Stream Risk Matrix'],
+    techStackBackend: ['PyTorch MultiSignalFusionNet', 'Triplet Loss', 'FastAPI', 'CUDA'],
+    aiType: 'Multi-Signal Attention Fusion',
+    description: 'The apex thesis contribution: simultaneously ingests all 6 acoustic signals through dedicated parallel CNN branches, weights their interactions via multi-head self-attention, and projects into a 256-D unified copyright embedding space for definitive Content ID verification.',
     pros: [
-      'Direct side-by-side empirical comparison across all 6 architectures',
-      'Shows exactly which method reduces false copyright claims on the Cakewalk Koto preset',
-      'Unified consensus verdict combining the strengths of all methodologies'
+      'End-to-end multi-signal neural fusion eliminating single-feature false positives',
+      'Self-attention dynamically balances melody vs rhythm vs timbre importance',
+      'Direct Cosine Distance projection outputs calibrated 0-100% platform strike risk'
     ],
     cons: [
-      'High aggregate computational footprint when executing all 6 models concurrently'
+      'Requires GPU-accelerated forward pass for batch processing (CPU fallback supported)',
+      'Demands multi-task triplet dataset training'
     ],
-    academicUsefulness: 'The pinnacle research contribution: allows defending your thesis with concrete empirical proof comparing rules vs ML vs Deep Learning vs Hybrid.'
+    academicUsefulness: 'The central scientific novelty of your thesis: Multi-Signal Neural Audio Processing outperforms single-signal baselines.'
   }
 };

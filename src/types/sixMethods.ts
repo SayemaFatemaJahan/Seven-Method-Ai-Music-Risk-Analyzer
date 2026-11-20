@@ -7,7 +7,21 @@ export interface MethodDescriptor {
   tagline: string;
   techStackFrontend: string[];
   techStackBackend: string[];
-  aiType: 'Python FastAPI + React' | 'Pure JS / TensorFlow.js' | 'Hybrid Microservice' | 'Deterministic Rules (No AI)' | 'Classical Machine Learning' | 'Deep Learning (CNN/LSTM)' | 'Multi-Method Ensemble';
+  aiType: 
+    | 'Chroma Harmonic Analysis'
+    | 'Log-Mel Spectrogram CNN'
+    | 'MFCC Timbre Analysis'
+    | 'Tempogram Metric Analysis'
+    | 'Tonnetz Tonal Centroid'
+    | 'Spectral Contrast Dynamics'
+    | 'Multi-Signal Attention Fusion'
+    | 'Python FastAPI + React'
+    | 'Pure JS / TensorFlow.js'
+    | 'Hybrid Microservice'
+    | 'Deterministic Rules (No AI)'
+    | 'Classical Machine Learning'
+    | 'Deep Learning (CNN/LSTM)'
+    | 'Multi-Method Ensemble';
   description: string;
   pros: string[];
   cons: string[];

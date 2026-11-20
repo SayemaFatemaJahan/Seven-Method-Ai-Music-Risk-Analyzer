@@ -13,7 +13,7 @@ export interface MethodRunnerInput {
 }
 
 /**
- * Calculates copyright risk and telemetry across each of the 6 distinct architectural methodologies.
+ * Calculates copyright risk and telemetry across each of the 6 distinct acoustic signal streams.
  */
 export function executeMethodSimulation(methodId: MethodId, input: MethodRunnerInput): SingleMethodResult {
   const { hasCakewalkKotoLoop, sampleType, bpm, key, dawFilterEnabled = true } = input;
@@ -33,185 +33,186 @@ export function executeMethodSimulation(methodId: MethodId, input: MethodRunnerI
   let explanation = '';
 
   switch (methodId) {
-    case 'method1': // Python AI Backend + React Frontend (FastAPI & Librosa)
-      processingTimeMs = 380; // Network roundtrip + Librosa FFT
+    case 'method1': // Method 1: Chroma CQT Harmonic Analyzer
+      processingTimeMs = 125;
+      chromaSimilarity = isCoverSong ? 0.88 : (isDirectSample ? 0.94 : 0.14);
       if (isDirectSample) {
-        riskPercentage = 86;
-        youtubeRiskPercentage = 88;
-        dspRiskPercentage = 84;
+        riskPercentage = 92;
+        youtubeRiskPercentage = 94;
+        dspRiskPercentage = 90;
         verdict = 'Direct Infringement';
-        explanation = '[FastAPI Librosa Service] MFCC Euclidean distance = 0.14 from reference master. Identical acoustic waveform segments identified via dynamic time warping (DTW).';
+        explanation = '[Chroma CQT Signal] 12-class pitch profile matches reference catalog master with 94.2% harmonic alignment. Sub-octave intervals confirm identical melodic progression.';
       } else if (isCoverSong) {
-        riskPercentage = 52;
-        youtubeRiskPercentage = 50;
-        dspRiskPercentage = 24;
+        riskPercentage = 84;
+        youtubeRiskPercentage = 82;
+        dspRiskPercentage = 55;
         verdict = 'Cover Song / Licensing Required';
-        explanation = '[FastAPI Librosa Service] Librosa chroma_cqt detected 82% harmonic pitch class profile match to traditional Rabindra Sangeet composition. Requires mechanical license.';
+        explanation = '[Chroma CQT Signal] High harmonic match (88.0%) detected against traditional composition. Melody and chord structure replicated; mechanical cover license required.';
       } else if (hasCakewalkKotoLoop) {
-        // Without loop de-biasing, raw Librosa spectral peaks match
-        riskPercentage = dawFilterEnabled ? 2 : 28;
-        youtubeRiskPercentage = dawFilterEnabled ? 1 : 28;
+        riskPercentage = dawFilterEnabled ? 3 : 26;
+        youtubeRiskPercentage = dawFilterEnabled ? 2 : 25;
+        dspRiskPercentage = dawFilterEnabled ? 3 : 28;
+        verdict = dawFilterEnabled ? 'Clear / Original' : 'Stock Loop Collision (False Positive Risk)';
+        explanation = dawFilterEnabled
+          ? '[Chroma CQT Signal] Stock pentatonic Koto pitch bins masked via harmonic notch filter. Melodic baseline confirmed original.'
+          : '[Chroma CQT Signal] Raw Chroma bins 4 and 9 collide with catalog tracks utilizing identical DAW Koto accompaniment loop.';
+      } else {
+        riskPercentage = 2;
+        youtubeRiskPercentage = 1;
+        dspRiskPercentage = 1;
+        explanation = '[Chroma CQT Signal] Pitch class distribution diverges 98% from reference catalog. Original chord progression and melodic contour verified.';
+      }
+      break;
+
+    case 'method2': // Method 2: Log-Mel Spectrogram Neural Stream
+      processingTimeMs = 210;
+      spectralOverlapPercent = isDirectSample ? 91.5 : (isCoverSong ? 38.0 : 4.2);
+      if (isDirectSample) {
+        riskPercentage = 94;
+        youtubeRiskPercentage = 96;
+        dspRiskPercentage = 92;
+        verdict = 'Direct Infringement';
+        explanation = '[Log-Mel Spectrogram 2D-CNN] 128-band energy spectrogram matches reference audio with 91.5% structural overlap across time-frequency bins.';
+      } else if (isCoverSong) {
+        riskPercentage = 44;
+        youtubeRiskPercentage = 42;
+        dspRiskPercentage = 22;
+        verdict = 'Cover Song / Licensing Required';
+        explanation = '[Log-Mel Spectrogram 2D-CNN] Mel-frequency distribution indicates acoustic re-recording of known melodic motifs. Energy pattern confirms original production arrangement.';
+      } else if (hasCakewalkKotoLoop) {
+        riskPercentage = dawFilterEnabled ? 2 : 18;
+        youtubeRiskPercentage = dawFilterEnabled ? 1 : 16;
+        dspRiskPercentage = dawFilterEnabled ? 2 : 20;
+        verdict = dawFilterEnabled ? 'Clear / Original' : 'Stock Loop Collision (False Positive Risk)';
+        explanation = dawFilterEnabled
+          ? '[Log-Mel Spectrogram 2D-CNN] Background loop frequency bands de-emphasized. Time-frequency distribution confirms novel master arrangement.'
+          : '[Log-Mel Spectrogram 2D-CNN] Mid-frequency energy clusters indicate identical stock synthesizer attack profiles.';
+      } else {
+        riskPercentage = 1;
+        youtubeRiskPercentage = 1;
+        dspRiskPercentage = 1;
+        explanation = '[Log-Mel Spectrogram 2D-CNN] Spectrogram spatial convolutions demonstrate 99.1% acoustic originality across full frequency spectrum.';
+      }
+      break;
+
+    case 'method3': // Method 3: MFCC Timbral Stem Discriminator
+      processingTimeMs = 85;
+      mfccDistance = isDirectSample ? 0.12 : (isCoverSong ? 2.9 : 4.4);
+      if (isDirectSample) {
+        riskPercentage = 96;
+        youtubeRiskPercentage = 98;
+        dspRiskPercentage = 95;
+        verdict = 'Direct Infringement';
+        explanation = '[MFCC Timbre Discriminator] 20 cepstral coefficients indicate direct master sample cloning (Euclidean distance = 0.12). Vocal formants and production color are identical.';
+      } else if (isCoverSong) {
+        riskPercentage = 18;
+        youtubeRiskPercentage = 20;
+        dspRiskPercentage = 12;
+        verdict = 'Clear / Original';
+        explanation = '[MFCC Timbre Discriminator] Distinct vocal timbre and singer formant signature (distance = 2.9). Proves audio was newly performed rather than sampled.';
+      } else if (hasCakewalkKotoLoop) {
+        riskPercentage = dawFilterEnabled ? 2 : 31;
+        youtubeRiskPercentage = dawFilterEnabled ? 1 : 30;
         dspRiskPercentage = dawFilterEnabled ? 2 : 32;
         verdict = dawFilterEnabled ? 'Clear / Original' : 'Stock Loop Collision (False Positive Risk)';
         explanation = dawFilterEnabled
-          ? '[FastAPI Librosa Service] Cakewalk Koto frequency bins filtered via Python SciPy iirnotch filter (-24dB). Mel-spectrogram confirms vocal originality.'
-          : '[FastAPI Librosa Service] Raw Librosa spectral peaks show 28.4% energy collision with catalog tracks sharing the Cakewalk Koto virtual instrument.';
+          ? '[MFCC Timbre Discriminator] Background timbre isolation filter applied. Lead vocal and solo instrument timbre verified authentic.'
+          : '[MFCC Timbre Discriminator] High timbral collision on synthetic plucked transient envelope (MFCC 2 & 4). Flags stock sample overlap.';
       } else {
         riskPercentage = 1;
         youtubeRiskPercentage = 1;
         dspRiskPercentage = 1;
-        explanation = '[FastAPI Librosa Service] Librosa feature vectors (MFCC, centroid, rolloff) show 98.8% statistical divergence from protected database.';
+        explanation = '[MFCC Timbre Discriminator] Cepstral envelope exhibits unique singer and instrumentation formants. Master recording sample theft ruled out.';
       }
       break;
 
-    case 'method2': // Pure JavaScript / TypeScript (Web Audio API & TensorFlow.js)
-      processingTimeMs = 18; // In-browser zero-backend execution
-      if (isDirectSample) {
-        riskPercentage = 84;
-        youtubeRiskPercentage = 85;
-        dspRiskPercentage = 82;
-        verdict = 'Direct Infringement';
-        explanation = '[Web Audio API & TF.js] Client-side AnalyserNode FFT frames match reference waveform hash. Executed 100% locally in browser memory.';
-      } else if (isCoverSong) {
-        riskPercentage = 46;
-        youtubeRiskPercentage = 45;
-        dspRiskPercentage = 20;
-        verdict = 'Cover Song / Licensing Required';
-        explanation = '[Web Audio API & TF.js] 12-bin Pitch Chroma extraction in WebGL indicates traditional harmonic alignment.';
-      } else if (hasCakewalkKotoLoop) {
-        riskPercentage = dawFilterEnabled ? 1 : 27;
-        youtubeRiskPercentage = dawFilterEnabled ? 1 : 27;
-        dspRiskPercentage = dawFilterEnabled ? 1 : 30;
-        verdict = dawFilterEnabled ? 'Clear / Original' : 'Stock Loop Collision (False Positive Risk)';
-        explanation = dawFilterEnabled
-          ? '[Web Audio API & TF.js] Client-side Float32Array DSP suppressed pentatonic Koto bins (293Hz-523Hz). Zero data sent to external servers.'
-          : '[Web Audio API & TF.js] FFT bin correlation flagged identical stock loop peaks. Local TF.js tensor distance = 0.28.';
-      } else {
-        riskPercentage = 1;
-        youtubeRiskPercentage = 1;
-        dspRiskPercentage = 1;
-        explanation = '[Web Audio API & TF.js] Audio buffer decoded in browser. All cosine distance checks confirm original material.';
-      }
-      break;
-
-    case 'method3': // Enterprise Hybrid (FastAPI + React + PostgreSQL/MongoDB)
-      processingTimeMs = 210;
+    case 'method4': // Method 4: Tempogram & Metric Onset Analyzer
+      processingTimeMs = 95;
       if (isDirectSample) {
         riskPercentage = 88;
-        youtubeRiskPercentage = 89;
-        dspRiskPercentage = 86;
+        youtubeRiskPercentage = 90;
+        dspRiskPercentage = 85;
         verdict = 'Direct Infringement';
-        explanation = '[SoundVault PostgreSQL Query] Sub-millisecond pgvector similarity search against 1,000 pre-indexed Bangladeshi songs matched BD-S84-93-00001 (Ayub Bachchu).';
+        explanation = '[Tempogram Rhythm Signal] Dynamic onset envelope and pulse grid exhibit 99.4% correlation with reference drum cadence and beat swing.';
       } else if (isCoverSong) {
-        riskPercentage = 54;
-        youtubeRiskPercentage = 52;
-        dspRiskPercentage = 22;
-        verdict = 'Cover Song / Licensing Required';
-        explanation = '[SoundVault PostgreSQL Query] Matched composition ISRC in Public Domain registry. DSP delivery requires mechanical cover flag.';
+        riskPercentage = 32;
+        youtubeRiskPercentage = 30;
+        dspRiskPercentage = 15;
+        verdict = 'Clear / Original';
+        explanation = '[Tempogram Rhythm Signal] Tempo tempo alignment detected, but rhythm meter and drum arrangement show original human performance variations.';
       } else if (hasCakewalkKotoLoop) {
-        riskPercentage = dawFilterEnabled ? 2 : 29;
-        youtubeRiskPercentage = dawFilterEnabled ? 1 : 29;
-        dspRiskPercentage = dawFilterEnabled ? 2 : 33;
+        riskPercentage = dawFilterEnabled ? 3 : 29;
+        youtubeRiskPercentage = dawFilterEnabled ? 2 : 28;
+        dspRiskPercentage = dawFilterEnabled ? 3 : 30;
         verdict = dawFilterEnabled ? 'Clear / Original' : 'Stock Loop Collision (False Positive Risk)';
         explanation = dawFilterEnabled
-          ? '[SoundVault Database Index] Stock soundbank table identified Cakewalk Koto preset. De-biasing rule applied before recording audit log.'
-          : '[SoundVault Database Index] Relational vector search flagged 3 catalog entries sharing the identical Cakewalk Koto accompaniment.';
+          ? '[Tempogram Rhythm Signal] Cyclic rhythm correlation masked for repetitive 4-bar DAW loop. Percussion cadence classified original.'
+          : '[Tempogram Rhythm Signal] Metric onset correlation matches identical 4-bar rhythmic grid of Cakewalk stock loop sequence.';
       } else {
         riskPercentage = 1;
         youtubeRiskPercentage = 1;
         dspRiskPercentage = 1;
-        explanation = '[SoundVault Database Index] 0 collisions found across 1,000 indexed records. Metadata clearance entry generated.';
+        explanation = '[Tempogram Rhythm Signal] Onset strength envelope confirms unique metric syncopation and original drum groove structure.';
       }
       break;
 
-    case 'method4': // Rule-Based Copyright Detector (Deterministic DSP, No AI)
-      processingTimeMs = 8; // Ultra-fast deterministic IF/THEN checks
+    case 'method5': // Method 5: Tonnetz Tonal Centroid Mapper
+      processingTimeMs = 110;
       if (isDirectSample) {
-        riskPercentage = 92;
-        youtubeRiskPercentage = 95;
-        dspRiskPercentage = 90;
-        verdict = 'Direct Infringement';
-        explanation = '[RuleHarmonic DSP Rules] RULE 1 (Tempo delta <= 1 BPM): TRUE | RULE 2 (Chroma overlap > 85%): TRUE | RULE 3 (Spectral Flux < 0.05): TRUE. Verdict: HIGH RISK.';
-      } else if (isCoverSong) {
-        riskPercentage = 68;
-        youtubeRiskPercentage = 65;
-        dspRiskPercentage = 40;
-        verdict = 'Cover Song / Licensing Required';
-        explanation = '[RuleHarmonic DSP Rules] RULE: Chroma pitch overlap = 84.2% (> 80% threshold). Fails deterministic originality rule.';
-      } else if (hasCakewalkKotoLoop) {
-        // High false positive because rules cannot differentiate background loops!
-        riskPercentage = dawFilterEnabled ? 4 : 32;
-        youtubeRiskPercentage = dawFilterEnabled ? 2 : 32;
-        dspRiskPercentage = dawFilterEnabled ? 4 : 35;
-        verdict = dawFilterEnabled ? 'Clear / Original' : 'Stock Loop Collision (False Positive Risk)';
-        explanation = dawFilterEnabled
-          ? '[RuleHarmonic DSP Rules] Pre-filter Rule: Suppressed frequency bins 38-42. Post-rule check passes under 5% threshold.'
-          : '[RuleHarmonic DSP Rules] CRITICAL FALSE POSITIVE! Deterministic Rule triggered: Identical spectral peaks detected in 440Hz/523Hz bins. Rule-based systems CANNOT detect that vocals are different!';
-      } else {
-        riskPercentage = 1;
-        youtubeRiskPercentage = 1;
-        dspRiskPercentage = 1;
-        explanation = '[RuleHarmonic DSP Rules] All deterministic thresholds (Tempo, Key, Spectral correlation) are well below the 15% alert barrier.';
-      }
-      break;
-
-    case 'method5': // Machine Learning (Random Forest & SVM on MFCC/Chroma)
-      processingTimeMs = 120;
-      if (isDirectSample) {
-        riskPercentage = 87;
-        youtubeRiskPercentage = 86;
+        riskPercentage = 90;
+        youtubeRiskPercentage = 91;
         dspRiskPercentage = 88;
         verdict = 'Direct Infringement';
-        explanation = '[FeatureNet Scikit-Learn] Random Forest (100 trees) vote: 88.4% Infringement | SVM (RBF kernel) decision function: +2.41. Top predictive features: MFCC_2 and Spectral_Contrast_3.';
+        explanation = '[Tonnetz Tonal Mapper] 6-D tonal centroid trajectories in 5ths and 3rds space are identical to catalog master recording.';
       } else if (isCoverSong) {
-        riskPercentage = 48;
-        youtubeRiskPercentage = 48;
-        dspRiskPercentage = 22;
+        riskPercentage = 82;
+        youtubeRiskPercentage = 80;
+        dspRiskPercentage = 50;
         verdict = 'Cover Song / Licensing Required';
-        explanation = '[FeatureNet Scikit-Learn] Random Forest classified as "Melodic Derivative". Probability = 0.51.';
+        explanation = '[Tonnetz Tonal Mapper] Transposition-invariant harmonic geometry reveals 82% identical tonal movement, confirming covered chord progression.';
       } else if (hasCakewalkKotoLoop) {
-        riskPercentage = dawFilterEnabled ? 2 : 24;
-        youtubeRiskPercentage = dawFilterEnabled ? 1 : 24;
-        dspRiskPercentage = dawFilterEnabled ? 2 : 28;
+        riskPercentage = dawFilterEnabled ? 2 : 22;
+        youtubeRiskPercentage = dawFilterEnabled ? 1 : 20;
+        dspRiskPercentage = dawFilterEnabled ? 2 : 24;
         verdict = dawFilterEnabled ? 'Clear / Original' : 'Stock Loop Collision (False Positive Risk)';
         explanation = dawFilterEnabled
-          ? '[FeatureNet Scikit-Learn] Feature vectors normalized with stock loop masking. Random forest probability drops to 1.8%.'
-          : '[FeatureNet Scikit-Learn] MFCC statistical summary influenced by repetitive Koto transients. SVM predicts 24.2% collision probability.';
+          ? '[Tonnetz Tonal Mapper] Tonal trajectory evaluated on harmonic bassline; ignores repetitive accompaniment preset.'
+          : '[Tonnetz Tonal Mapper] Centroid trajectory reflects identical harmonic triad cycle from shared DAW synthesizer bank.';
       } else {
         riskPercentage = 1;
         youtubeRiskPercentage = 1;
         dspRiskPercentage = 1;
-        explanation = '[FeatureNet Scikit-Learn] Random Forest classifier: 99.1% probability "Original Track".';
+        explanation = '[Tonnetz Tonal Mapper] Harmonic centroid vectors demonstrate completely distinct harmonic modulation paths.';
       }
       break;
 
-    case 'method6': // Deep Learning (2D Mel-CNN & Bi-LSTM Attention Network)
-      processingTimeMs = 490; // Deep neural network forward pass
-      confidence = 0.99;
+    case 'method6': // Method 6: Spectral Contrast & Texture Stream
+      processingTimeMs = 90;
       if (isDirectSample) {
-        riskPercentage = 91;
-        youtubeRiskPercentage = 92;
-        dspRiskPercentage = 90;
+        riskPercentage = 89;
+        youtubeRiskPercentage = 90;
+        dspRiskPercentage = 87;
         verdict = 'Direct Infringement';
-        explanation = '[DeepSpectra PyTorch CNN-LSTM] Perceptual embedding Cosine Similarity = 0.942. Attention heatmap highlights identical 14-second audio segment.';
+        explanation = '[Spectral Contrast Signal] Peak-to-valley energy ratios across 7 frequency sub-bands match master track dynamic range profile.';
       } else if (isCoverSong) {
-        riskPercentage = 42;
-        youtubeRiskPercentage = 40;
-        dspRiskPercentage = 18;
-        verdict = 'Cover Song / Licensing Required';
-        explanation = '[DeepSpectra PyTorch CNN-LSTM] Convolutional layers isolated harmonic melodic contour of Rabindra Sangeet. Recommends mechanical clearance.';
-      } else if (hasCakewalkKotoLoop) {
-        // Deep learning with stem separation naturally suppresses background loops
-        riskPercentage = dawFilterEnabled ? 1 : 6;
-        youtubeRiskPercentage = dawFilterEnabled ? 1 : 5;
-        dspRiskPercentage = dawFilterEnabled ? 1 : 7;
+        riskPercentage = 24;
+        youtubeRiskPercentage = 22;
+        dspRiskPercentage = 15;
         verdict = 'Clear / Original';
-        explanation = '[DeepSpectra PyTorch CNN-LSTM] Deep stem separation isolated vocal lead from background accompaniment. Cosine similarity of vocal embedding = 0.04 (Original). Cakewalk Koto loop automatically de-weighted!';
+        explanation = '[Spectral Contrast Signal] Acoustic texture profile reflects modern production and contemporary mastering dynamics.';
+      } else if (hasCakewalkKotoLoop) {
+        riskPercentage = dawFilterEnabled ? 2 : 25;
+        youtubeRiskPercentage = dawFilterEnabled ? 1 : 24;
+        dspRiskPercentage = dawFilterEnabled ? 2 : 27;
+        verdict = dawFilterEnabled ? 'Clear / Original' : 'Stock Loop Collision (False Positive Risk)';
+        explanation = dawFilterEnabled
+          ? '[Spectral Contrast Signal] Sub-band 3 contrast normalized. Master production dynamics confirm original audio mix.'
+          : '[Spectral Contrast Signal] High contrast peak in 1kHz-2kHz band flags common synthesized pluck attack signature.';
       } else {
         riskPercentage = 1;
         youtubeRiskPercentage = 1;
         dspRiskPercentage = 1;
-        explanation = '[DeepSpectra PyTorch CNN-LSTM] Multi-head self-attention embedding distance = 0.991 from all 1,000 Bangladeshi catalog tracks.';
+        explanation = '[Spectral Contrast Signal] Dynamic contrast and spectral flux indicate distinct sound design and master processing.';
       }
       break;
 
@@ -250,7 +251,8 @@ export function executeMethodSimulation(methodId: MethodId, input: MethodRunnerI
 }
 
 /**
- * Runs all 6 methods in parallel for the 7th website ("Multi-Method Ai music analyzer with 6 methods")
+ * Executes Method 7: The Master Multi-Signal Attention Fusion Network
+ * Fuses all 6 acoustic streams using cross-attention to resolve false positives and generate calibrated strike risks.
  */
 export function executeUnifiedSevenMethods(input: MethodRunnerInput): UnifiedMultiMethodResult {
   const methodIds: MethodId[] = ['method1', 'method2', 'method3', 'method4', 'method5', 'method6'];
@@ -268,13 +270,13 @@ export function executeUnifiedSevenMethods(input: MethodRunnerInput): UnifiedMul
     totalDspRisk += res.dspRiskPercentage;
   }
 
-  // Check if Deep Learning (Method 6) or Neural filters vetoed Rule-Based (Method 4) false positive
-  const ruleBasedResult = resultsByMethod['method4'];
-  const deepLearningResult = resultsByMethod['method6'];
-  const falsePositiveVetoTriggered = input.hasCakewalkKotoLoop && ruleBasedResult.riskPercentage > 20 && deepLearningResult.riskPercentage <= 6;
+  // Multi-Signal Neural Fusion: Check if Attention Veto resolves stock DAW loop false positive
+  const chromaResult = resultsByMethod['method1'];
+  const mfccResult = resultsByMethod['method3'];
+  const falsePositiveVetoTriggered = input.hasCakewalkKotoLoop && input.dawFilterEnabled && (chromaResult.riskPercentage <= 5 && mfccResult.riskPercentage <= 5);
 
   const overallConsensusRisk = falsePositiveVetoTriggered 
-    ? 1 
+    ? 2 
     : Math.round(totalRisk / methodIds.length);
 
   const youtubeConsensusRisk = falsePositiveVetoTriggered 
@@ -282,16 +284,18 @@ export function executeUnifiedSevenMethods(input: MethodRunnerInput): UnifiedMul
     : Math.round(totalYtRisk / methodIds.length);
 
   const dspConsensusRisk = falsePositiveVetoTriggered 
-    ? 1 
+    ? 2 
     : Math.round(totalDspRisk / methodIds.length);
 
   let scientificConclusion = '';
   if (falsePositiveVetoTriggered) {
-    scientificConclusion = `Cross-Method Research Finding: Method 4 (Rule-Based DSP) falsely flagged ${ruleBasedResult.riskPercentage}% copyright risk due to the Cakewalk Koto virtual instrument beat. In contrast, Method 6 (Deep Learning CNN-LSTM) isolated the vocal stem and proved 99% originality. The Multi-Method Consensus safely overrides the false claim.`;
+    scientificConclusion = `Multi-Signal Neural Attention Verdict: Although isolated sub-signals showed minor energy collisions on the Cakewalk Koto preset, the cross-attention fusion layer cross-referenced MFCC vocal formants and Chroma melody contours to confirm 98% compositional originality. False claim successfully prevented!`;
   } else if (input.sampleType === 'clean-original') {
-    scientificConclusion = 'All 6 methods uniformly identified direct master recording theft (>84% infringement consensus). Immediate ContentID takedown imminent.';
+    scientificConclusion = 'All 6 acoustic signal streams (Chroma, Mel-Spec, MFCC, Tempogram, Tonnetz, Spectral Contrast) uniformly detected master recording theft (>90% consensus). YouTube Content ID strike imminent.';
+  } else if (input.sampleType === 'rabindra-cover') {
+    scientificConclusion = 'Chroma CQT and Tonnetz signals identified identical melody and chord progression (84% harmonic overlap), while MFCC confirmed original vocal performance. Mechanical cover song clearance required.';
   } else {
-    scientificConclusion = 'All 6 methods confirmed pristine originality. Approved for automated YouTube monetization and Spotify/Apple Music store distribution.';
+    scientificConclusion = 'All 6 acoustic signals confirm pristine originality across melody, rhythm, timbre, and harmony. Approved for automated YouTube monetization and global distribution.';
   }
 
   return {

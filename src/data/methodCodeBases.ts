@@ -3,427 +3,263 @@ import { MethodCodePackage } from '../types/sixMethods';
 export const METHOD_CODE_PACKAGES: Record<string, MethodCodePackage> = {
   method1: {
     methodId: 'method1',
-    title: 'Method 1: AcousticPulse PyBridge (FastAPI + React)',
+    title: 'Method 1: Chroma CQT Harmonic Analyzer (Melodic & Chord Detection)',
     backendInstructions: [
-      '1. Create a virtual environment: python -m venv venv && source venv/bin/activate',
-      '2. Install dependencies: pip install fastapi uvicorn librosa numpy scikit-learn python-multipart',
-      '3. Run FastAPI backend: uvicorn main:app --reload --port 8000'
+      '1. Navigate to: cd ai_engine',
+      '2. Activate environment: .\\venv\\Scripts\\Activate.ps1',
+      '3. Feature extraction uses Librosa Constant-Q Chroma: librosa.feature.chroma_cqt'
     ],
     frontendInstructions: [
-      '1. Create React frontend: npm create vite@latest frontend -- --template react-ts',
-      '2. Install Tailwind CSS and Axios: npm install axios lucide-react',
-      '3. Run development server: npm run dev -- --port 3000'
+      '1. Harmonic Pitch Class display renders 12 semi-tone energy levels (C through B)',
+      '2. Invariant to octave transposition and synthesizer instrumentation'
     ],
     files: [
       {
-        filename: 'backend/main.py',
+        filename: 'ai_engine/chroma_extractor.py',
         language: 'python',
-        purpose: 'FastAPI Backend service with Librosa audio feature extraction',
-        code: `from fastapi import FastAPI, UploadFile, File
-from fastapi.middleware.cors import CORSMiddleware
-import librosa
+        purpose: 'Constant-Q Pitch Chroma extraction for melodic & chord plagiarism detection',
+        code: `import librosa
 import numpy as np
-import io
+import torch
 
-app = FastAPI(title="AcousticPulse PyBridge - Audio Copyright Engine")
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-@app.post("/api/analyze-audio")
-async def analyze_audio(file: UploadFile = File(...)):
-    # Read audio bytes directly from upload
-    audio_bytes = await file.read()
+def extract_chroma_cqt(y, sr=22050):
+    """
+    Method 1: Extracts 12-dimensional pitch chroma distributions invariant to octave.
+    Detects stolen chord progressions, melody covers, and harmonic copying.
+    """
+    # Compute Constant-Q Chroma across 12 pitch classes
+    chroma = librosa.feature.chroma_cqt(y=y, sr=sr, n_chroma=12)
     
-    # Load audio using Librosa (downsampled to 22,050 Hz mono)
-    y, sr = librosa.load(io.BytesIO(audio_bytes), sr=22050, mono=True)
+    # Normalize energy per frame
+    chroma_norm = librosa.util.normalize(chroma, norm=2, axis=0)
     
-    # 1. Extract Tempo (BPM)
-    tempo, _ = librosa.beat.beat_track(y=y, sr=sr)
-    
-    # 2. Extract 13 Mel-Frequency Cepstral Coefficients (MFCCs)
-    mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13)
-    mfcc_mean = np.mean(mfcc, axis=1).tolist()
-    
-    # 3. Extract 12-bin Pitch Chroma
-    chroma = librosa.feature.chroma_stft(y=y, sr=sr)
-    chroma_mean = np.mean(chroma, axis=1).tolist()
-    
-    # 4. Check Cakewalk Koto beat frequency collision
-    # Scan for high energy concentration at Insen scale frequencies (293Hz, 440Hz, 523Hz)
-    spec = np.abs(librosa.stft(y))
-    koto_freqs = [293.66, 311.13, 392.00, 440.00, 523.25]
-    bin_resolution = sr / 2048
-    koto_energy = sum(np.mean(spec[int(f / bin_resolution), :]) for f in koto_freqs) / len(koto_freqs)
-    
-    has_cakewalk_koto = bool(koto_energy > 0.18)
-    
-    # Compute simulated risk
-    raw_acoustic_match = 28.5 if has_cakewalk_koto else 1.2
-    filtered_risk = 1.0 if has_cakewalk_koto else raw_acoustic_match
-    
-    return {
-        "filename": file.filename,
-        "duration_seconds": float(librosa.get_duration(y=y, sr=sr)),
-        "detected_bpm": float(tempo),
-        "raw_acoustic_match_pct": raw_acoustic_match,
-        "youtube_risk_pct": 1 if has_cakewalk_koto else raw_acoustic_match,
-        "dsp_risk_pct": 2 if has_cakewalk_koto else raw_acoustic_match,
-        "has_cakewalk_koto_loop": has_cakewalk_koto,
-        "mfcc_vector_sample": mfcc_mean[:5],
-        "chroma_pitch_sample": chroma_mean[:5]
-    }`
-      },
-      {
-        filename: 'frontend/src/App.tsx',
-        language: 'typescript',
-        purpose: 'React 19 + TypeScript frontend communicating with FastAPI backend',
-        code: `import React, { useState } from 'react';
-import axios from 'axios';
-
-export default function AcousticPulseApp() {
-  const [file, setFile] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
-
-  const handleUpload = async () => {
-    if (!file) return;
-    setLoading(true);
-    const formData = new FormData();
-    formData.append('file', file);
-    try {
-      const response = await axios.post('http://localhost:8000/api/analyze-audio', formData);
-      setResult(response.data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-slate-950 text-white p-8">
-      <h1 className="text-2xl font-bold text-indigo-400">AcousticPulse PyBridge</h1>
-      <p className="text-sm text-slate-400">Python AI FastAPI + React Audio Copyright Analyzer</p>
-      
-      <div className="mt-6 p-6 bg-slate-900 border border-slate-800 rounded-xl max-w-xl">
-        <input type="file" accept="audio/*" onChange={(e) => setFile(e.target.files?.[0] || null)} />
-        <button onClick={handleUpload} disabled={loading || !file} className="mt-4 px-4 py-2 bg-indigo-600 rounded">
-          {loading ? 'Analyzing with Librosa...' : 'Send to Python Backend'}
-        </button>
-
-        {result && (
-          <div className="mt-6 space-y-2 border-t border-slate-800 pt-4 text-xs font-mono">
-            <div>BPM: {result.detected_bpm}</div>
-            <div>YouTube Risk: {result.youtube_risk_pct}%</div>
-            <div>DSP Risk: {result.dsp_risk_pct}%</div>
-            <div>Cakewalk Loop Detected: {result.has_cakewalk_koto_loop ? 'YES (-24dB Filtered)' : 'NO'}</div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}`
+    # Convert to PyTorch Tensor: (1, 12, Time)
+    tensor = torch.tensor(chroma_norm, dtype=torch.float32).unsqueeze(0)
+    return tensor`
       }
     ]
   },
   method2: {
     methodId: 'method2',
-    title: 'Method 2: BrowserSonic JS (Pure JavaScript / TypeScript)',
+    title: 'Method 2: Log-Mel Spectrogram Neural Stream (Time-Frequency Energy)',
     backendInstructions: [
-      '✅ ZERO BACKEND NEEDED!',
-      'This method executes 100% in the user browser using the W3C Web Audio API and TensorFlow.js.',
-      'No Python, no server costs, and total artist privacy.'
+      '1. Uses 128 Mel frequency filter banks mapped to human auditory perception',
+      '2. Power converted to decibels: librosa.power_to_db'
     ],
     frontendInstructions: [
-      '1. Clone and install: npm install',
-      '2. Run Vite dev server: npm run dev',
-      '3. Open browser: http://localhost:3000'
+      '1. Visualized as high-resolution time-frequency spectrogram heatmap'
     ],
     files: [
       {
-        filename: 'src/services/webAudioAnalyzer.ts',
-        language: 'typescript',
-        purpose: 'Pure TypeScript Web Audio API decoder and FFT feature extractor',
-        code: `export async function analyzeAudioInBrowser(file: File): Promise<{
-  bpm: number;
-  durationSeconds: number;
-  sha256Hash: string;
-  cakewalkKotoDetected: boolean;
-  youtubeRiskPct: number;
-  dspRiskPct: number;
-}> {
-  const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-  const ctx = new AudioCtx();
-  
-  const arrayBuffer = await file.arrayBuffer();
-  const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
-  
-  // Calculate SHA-256 via browser WebCrypto
-  const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const sha256 = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  
-  // Real PCM data analysis in client memory
-  const channelData = audioBuffer.getChannelData(0);
-  const duration = audioBuffer.duration;
-  
-  // In-browser beat detection via energy flux
-  let bpm = 104;
-  
-  // Scan for Cakewalk Koto virtual instrument signature (293Hz-523Hz pentatonic energy)
-  const isCakewalkKoto = file.name.toLowerCase().includes('koto') || duration > 120;
-  
-  return {
-    bpm,
-    durationSeconds: Math.round(duration),
-    sha256Hash: sha256,
-    cakewalkKotoDetected: isCakewalkKoto,
-    youtubeRiskPct: isCakewalkKoto ? 1 : 1, // Filtered
-    dspRiskPct: isCakewalkKoto ? 2 : 1
-  };
-}`
+        filename: 'ai_engine/mel_spec_stream.py',
+        language: 'python',
+        purpose: 'Perceptual 128-band Mel Spectrogram generator for 2D convolutional network',
+        code: `import librosa
+import numpy as np
+import torch
+
+def extract_mel_spectrogram(y, sr=22050, n_mels=128):
+    """
+    Method 2: Transforms raw audio into 128-band Mel-frequency spectrograms.
+    Captures perceptual acoustic signatures for 2D spatial CNN feature extraction.
+    """
+    mel = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=n_mels)
+    mel_db = librosa.power_to_db(mel, ref=np.max)
+    
+    # Tensor with Channel dimension: (1, 128, Time)
+    tensor = torch.tensor(mel_db, dtype=torch.float32).unsqueeze(0)
+    return tensor`
       }
     ]
   },
   method3: {
     methodId: 'method3',
-    title: 'Method 3: SoundVault Hybrid (FastAPI + React + PostgreSQL)',
+    title: 'Method 3: MFCC Timbral Stem Discriminator (Vocal & Sample Theft)',
     backendInstructions: [
-      '1. Start PostgreSQL with pgvector extension: docker run -p 5432:5432 -e POSTGRES_PASSWORD=postgres pgvector/pgvector:pg16',
-      '2. Install Python packages: pip install fastapi uvicorn sqlalchemy psycopg2-binary librosa pgvector',
-      '3. Run FastAPI server: uvicorn main:app --port 8000'
+      '1. Extracts 20 Mel-Frequency Cepstral Coefficients (MFCCs)',
+      '2. Captures vocal tract formants and instrument timbral color'
     ],
     frontendInstructions: [
-      '1. Install dependencies: npm install',
-      '2. Start React app: npm run dev'
+      '1. Visualized on Timbre Radar to differentiate singer identity from background loops'
     ],
     files: [
       {
-        filename: 'backend/models.py',
+        filename: 'ai_engine/mfcc_discriminator.py',
         language: 'python',
-        purpose: 'SQLAlchemy database schema indexing 1,000 authorized songs with vector search',
-        code: `from sqlalchemy import Column, Integer, String, Float, Boolean
-from sqlalchemy.ext.declarative import declarative_base
-from pgvector.sqlalchemy import Vector
+        purpose: 'MFCC extraction for singer identification and direct audio stem clearance',
+        code: `import librosa
+import torch
 
-Base = declarative_base()
-
-class IndexedSong(Base):
-    __tablename__ = "indexed_bangladeshi_songs"
-
-    id = Column(Integer, primary_key=True, index=True)
-    title = Column(String(255), nullable=False)
-    artist = Column(String(255), nullable=False)
-    genre = Column(String(100), nullable=False)
-    bpm = Column(Integer, nullable=False)
-    key_signature = Column(String(50), nullable=False)
-    isrc_code = Column(String(50), unique=True, nullable=False)
-    has_daw_loop = Column(Boolean, default=False)
-    daw_loop_name = Column(String(100), nullable=True) # e.g. "Cakewalk Koto"
+def extract_mfcc(y, sr=22050, n_mfcc=20):
+    """
+    Method 3: Extracts 20 Mel-Frequency Cepstral Coefficients.
+    Proves whether audio was performed live or directly sampled from a master stem.
+    """
+    mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=n_mfcc)
     
-    # 128-dimensional Mel-Spectrogram embedding vector
-    audio_embedding = Column(Vector(128))`
+    # Tensor shape: (1, 20, Time)
+    tensor = torch.tensor(mfcc, dtype=torch.float32).unsqueeze(0)
+    return tensor`
       }
     ]
   },
   method4: {
     methodId: 'method4',
-    title: 'Method 4: RuleHarmonic DSP (Rule-Based, No AI/ML)',
+    title: 'Method 4: Tempogram & Metric Onset Analyzer (Rhythm & Beat Grid)',
     backendInstructions: [
-      '1. Install: pip install librosa numpy scipy',
-      '2. Run rule script: python rule_comparator.py songA.wav songB.wav'
+      '1. Computes onset strength envelope from audio transients',
+      '2. Builds cyclic tempogram matrix to evaluate groove and drum syncopation'
     ],
     frontendInstructions: [
-      '1. React UI compares deterministic rule thresholds (BPM, Key, Chroma overlap)'
+      '1. Visualized on BPM Pulse Monitor'
     ],
     files: [
       {
-        filename: 'rule_comparator.py',
+        filename: 'ai_engine/tempogram_analyzer.py',
         language: 'python',
-        purpose: 'Deterministic rule-based comparator using mathematical thresholds without Machine Learning',
-        code: `import numpy as np
+        purpose: 'Dynamic onset correlation & tempogram matrix for beat plagiarism detection',
+        code: `import librosa
+import torch
 
-def evaluate_deterministic_rules(song_a_features, song_b_features):
+def extract_tempogram(y, sr=22050):
     """
-    Deterministic rule comparator. No Neural Networks or Random Forests.
-    Vulnerable to Cakewalk Koto false positives!
+    Method 4: Dynamic onset envelope & cyclic tempogram.
+    Differentiates between shared generic tempos and identical stolen drum loops.
     """
-    # Rule 1: Tempo Proximity
-    tempo_diff = abs(song_a_features['bpm'] - song_b_features['bpm'])
-    rule_1_tempo_match = tempo_diff <= 3.0 # Within 3 BPM
+    onset_env = librosa.onset.onset_strength(y=y, sr=sr)
+    tempogram = librosa.feature.tempogram(onset_envelope=onset_env, sr=sr)
     
-    # Rule 2: Pitch Chroma Overlap
-    chroma_dot = np.dot(song_a_features['chroma'], song_b_features['chroma'])
-    rule_2_chroma_match = chroma_dot > 0.80 # 80% pitch alignment
-    
-    # Rule 3: Stock Loop Vulnerability
-    # If both songs use the Cakewalk Koto preset, rule_2 is triggered even if lyrics/melody differ!
-    if rule_1_tempo_match and rule_2_chroma_match:
-        return {
-            "verdict": "HIGH COPYRIGHT RISK (Rule Triggered)",
-            "risk_percentage": 85,
-            "rule_1_tempo": True,
-            "rule_2_chroma": True,
-            "warning": "May be a FALSE POSITIVE if both tracks share a Cakewalk Koto virtual instrument loop!"
-        }
-    
-    return {
-        "verdict": "LOW RISK (Rules Passed)",
-        "risk_percentage": 5
-    }`
+    # Tensor shape: (1, Freq, Time)
+    tensor = torch.tensor(tempogram, dtype=torch.float32).unsqueeze(0)
+    return tensor`
       }
     ]
   },
   method5: {
     methodId: 'method5',
-    title: 'Method 5: FeatureNet ML (Scikit-Learn Random Forest & SVM)',
+    title: 'Method 5: Tonnetz Tonal Centroid Mapper (Harmonic Vector Space)',
     backendInstructions: [
-      '1. Install: pip install scikit-learn pandas numpy librosa joblib',
-      '2. Train model: python train_classifier.py --dataset catalog_1000.csv'
+      '1. Projects pitch chroma onto a 6-dimensional Euler tonal network',
+      '2. Tracks fifths, minor thirds, and major thirds trajectories'
     ],
     frontendInstructions: [
-      '1. React UI showing ML feature importance weights (MFCC, Zero-crossing rate, Chroma)'
+      '1. Visualized on 6D Tonal Centroid geometry chart'
     ],
     files: [
       {
-        filename: 'train_classifier.py',
+        filename: 'ai_engine/tonnetz_mapper.py',
         language: 'python',
-        purpose: 'Machine Learning training pipeline using Random Forest and SVM on audio features',
-        code: `from sklearn.ensemble import RandomForestClassifier
-from sklearn.svm import SVC
-from sklearn.model_selection import train_test_split
-import numpy as np
-import joblib
+        purpose: '6-dimensional tonal centroid extraction for transposition-invariant chord analysis',
+        code: `import librosa
+import torch
 
-def train_copyright_classifier(X_features, y_labels):
+def extract_tonnetz(y, sr=22050):
     """
-    Trains Random Forest and SVM on 26 extracted MFCC and spectral features.
+    Method 5: 6-Dimensional Tonal Centroid Space (Tonnetz).
+    Detects borrowed chord progressions and key modulations invariant to pitch shift.
     """
-    X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2)
+    tonnetz = librosa.feature.tonnetz(y=y, sr=sr)
     
-    # 1. Random Forest Classifier
-    rf_model = RandomForestClassifier(n_estimators=100, max_depth=12, random_state=42)
-    rf_model.fit(X_train, y_train)
-    
-    # 2. Support Vector Machine with RBF Kernel
-    svm_model = SVC(kernel='rbf', probability=True, C=1.5)
-    svm_model.fit(X_train, y_train)
-    
-    print(f"Random Forest Test Accuracy: {rf_model.score(X_test, y_test) * 100:.2f}%")
-    print(f"SVM Test Accuracy:           {svm_model.score(X_test, y_test) * 100:.2f}%")
-    
-    joblib.dump(rf_model, 'copyright_rf_model.pkl')
-    return rf_model`
+    # Tensor shape: (1, 6, Time)
+    tensor = torch.tensor(tonnetz, dtype=torch.float32).unsqueeze(0)
+    return tensor`
       }
     ]
   },
   method6: {
     methodId: 'method6',
-    title: 'Method 6: DeepSpectra AI (2D Mel-CNN & Bi-LSTM Attention Network)',
+    title: 'Method 6: Spectral Contrast & Texture Stream (Acoustic Brightness)',
     backendInstructions: [
-      '1. Install PyTorch: pip install torch torchaudio torchvision librosa',
-      '2. Run deep learning inference: python predict_deep_model.py --audio song.wav'
+      '1. Measures energy difference between peaks and valleys across 7 sub-bands',
+      '2. Identifies sound design and master production signatures'
     ],
     frontendInstructions: [
-      '1. React UI with Mel-Spectrogram attention map visualization'
+      '1. Visualized on Spectral Flux Scope'
     ],
     files: [
       {
-        filename: 'deep_spectrogram_cnn.py',
+        filename: 'ai_engine/spectral_contrast.py',
         language: 'python',
-        purpose: 'Deep Convolutional and Recurrent Neural Network in PyTorch with Stem Separation',
-        code: `import torch
-import torch.nn as nn
-import torchaudio.transforms as T
+        purpose: 'Spectral contrast extraction across 7 frequency sub-bands',
+        code: `import librosa
+import torch
 
-class DeepSpectraCopyrightCNN(nn.Module):
+def extract_spectral_contrast(y, sr=22050):
     """
-    2D Convolutional Neural Network + Bi-LSTM with Multi-Head Attention.
-    Immune to Cakewalk Koto false positives due to perceptual stem embeddings!
+    Method 6: Peak-to-valley energy dynamics across 7 sub-bands.
+    Evaluates audio mastering brightness, synthesizer textures, and sound design.
     """
-    def __init__(self):
-        super(DeepSpectraCopyrightCNN, self).__init__()
-        
-        # 2D CNN Feature Extractor
-        self.conv_layers = nn.Sequential(
-            nn.Conv2d(1, 32, kernel_size=3, padding=1),
-            nn.BatchNorm2d(32),
-            nn.ReLU(),
-            nn.MaxPool2d(2, 2),
-            
-            nn.Conv2d(32, 64, kernel_size=3, padding=1),
-            nn.BatchNorm2d(64),
-            nn.ReLU(),
-            nn.MaxPool2d(2, 2),
-            
-            nn.Conv2d(64, 128, kernel_size=3, padding=1),
-            nn.BatchNorm2d(128),
-            nn.ReLU(),
-            nn.AdaptiveAvgPool2d((16, 16))
-        )
-        
-        # Bidirectional LSTM for temporal melody dynamics
-        self.lstm = nn.LSTM(input_size=128 * 16, hidden_size=128, num_layers=2, batch_first=True, bidirectional=True)
-        
-        # Linear Embedding Projection
-        self.fc = nn.Linear(256, 128) # 128-dim perceptual vector
-
-    def forward(self, mel_spec):
-        # mel_spec shape: [batch, 1, 128_mels, time_steps]
-        x = self.conv_layers(mel_spec)
-        x = x.permute(0, 3, 1, 2).flatten(2)
-        lstm_out, _ = self.lstm(x)
-        embedding = self.fc(lstm_out[:, -1, :])
-        return nn.functional.normalize(embedding, p=2, dim=1)`
+    contrast = librosa.feature.spectral_contrast(y=y, sr=sr)
+    
+    # Tensor shape: (1, 7, Time)
+    tensor = torch.tensor(contrast, dtype=torch.float32).unsqueeze(0)
+    return tensor`
       }
     ]
   },
   method7_unified: {
     methodId: 'method7_unified',
-    title: 'Method 7: Multi-Method Ai music analyzer with 6 methods (Unified Suite)',
+    title: 'Method 7: Multi-Signal Deep Attention Fusion Network (The Master Ensemble)',
     backendInstructions: [
-      '1. Master Python Runner orchestrating all 6 methods in parallel threads',
-      '2. Gathers outputs from FastAPI, Rule DSP, Random Forest, and PyTorch Mel-CNN',
-      '3. Calculates cross-method consensus and flags Cakewalk Koto false positive veto'
+      '1. PyTorch Multi-Branch Neural Network with 6 parallel CNN feature extractors',
+      '2. Multi-Head Self-Attention dynamically weights melody vs rhythm vs timbre',
+      '3. Projects into 256-D unified copyright embedding space via Triplet Margin Loss'
     ],
     frontendInstructions: [
-      '1. React UI rendering 6 distinct output segments side-by-side with interactive scrubbers'
+      '1. React UI renders Master Risk Meter + Sub-Signal Breakdown Matrix'
     ],
     files: [
       {
-        filename: 'multi_method_orchestrator.py',
+        filename: 'ai_engine/model.py',
         language: 'python',
-        purpose: 'Master Python orchestrator executing all 6 methods and aggregating segmented outputs',
-        code: `import asyncio
-from concurrent.futures import ThreadPoolExecutor
+        purpose: 'Master PyTorch Multi-Branch Attention Fusion Network for Copyright Risk Detection',
+        code: `import torch
+import torch.nn as nn
+import torch.nn.functional as F
 
-async def run_all_six_methods(audio_path):
-    loop = asyncio.get_event_loop()
-    with ThreadPoolExecutor() as executor:
-        # Execute all 6 methods concurrently
-        task1 = loop.run_in_executor(executor, run_method_1_fastapi_librosa, audio_path)
-        task2 = loop.run_in_executor(executor, run_method_2_pure_js_webaudio, audio_path)
-        task3 = loop.run_in_executor(executor, run_method_3_hybrid_db, audio_path)
-        task4 = loop.run_in_executor(executor, run_method_4_rule_dsp, audio_path)
-        task5 = loop.run_in_executor(executor, run_method_5_machine_learning, audio_path)
-        task6 = loop.run_in_executor(executor, run_method_6_deep_learning, audio_path)
+class MultiSignalFusionNet(nn.Module):
+    """
+    Method 7: Master Multi-Signal Attention Fusion Network
+    Fuses 6 acoustic signals (Chroma, Mel, MFCC, Tempogram, Tonnetz, Contrast)
+    into a unified 256-D copyright similarity metric.
+    """
+    def __init__(self, embedding_dim=256):
+        super(MultiSignalFusionNet, self).__init__()
         
-        results = await asyncio.gather(task1, task2, task3, task4, task5, task6)
+        # 6 Dedicated Convolutional Feature Extractors
+        self.chroma_branch = SignalCNNBranch(1, 64)
+        self.mel_branch = SignalCNNBranch(1, 64)
+        self.mfcc_branch = SignalCNNBranch(1, 64)
+        self.tempo_branch = SignalCNNBranch(1, 64)
+        self.tonnetz_branch = SignalCNNBranch(1, 64)
+        self.contrast_branch = SignalCNNBranch(1, 64)
         
-    return {
-        "method_1_pybridge": results[0],
-        "method_2_browsersonic": results[1],
-        "method_3_soundvault": results[2],
-        "method_4_ruleharmonic": results[3],
-        "method_5_featurenet": results[4],
-        "method_6_deepspectra": results[5],
-        "consensus_verdict": evaluate_consensus(results)
-    }`
+        # Multi-Head Attention across the 6 signal tokens
+        self.attention = nn.MultiheadAttention(embed_dim=64, num_heads=4, batch_first=True)
+        
+        # Metric Learning Projection Head
+        self.projection = nn.Sequential(
+            nn.Linear(64 * 6, 512),
+            nn.ReLU(),
+            nn.Dropout(0.2),
+            nn.Linear(512, embedding_dim)
+        )
+
+    def forward(self, signals):
+        # Forward pass through each dedicated branch
+        tokens = torch.stack([
+            self.chroma_branch(signals["chroma"]),
+            self.mel_branch(signals["mel_spec"]),
+            self.mfcc_branch(signals["mfcc"]),
+            self.tempo_branch(signals["tempogram"]),
+            self.tonnetz_branch(signals["tonnetz"]),
+            self.contrast_branch(signals["contrast"])
+        ], dim=1) # (Batch, 6, 64)
+        
+        attn_out, _ = self.attention(tokens, tokens, tokens)
+        flat = attn_out.reshape(attn_out.size(0), -1)
+        embedding = F.normalize(self.projection(flat), p=2, dim=1)
+        return embedding`
       }
     ]
   }

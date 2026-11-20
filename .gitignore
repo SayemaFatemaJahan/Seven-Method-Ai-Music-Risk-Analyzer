@@ -6,3 +6,18 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Python virtual environment & caches
+venv/
+__pycache__/
+*.pyc
+
+# Real audio files (do not upload large audio binaries to git)
+*.wav
+*.mp3
+*.flac
+*.ogg
+*.m4a
+ai_engine/data/raw_audio/
+ai_engine/checkpoints/*.pt
+ai_engine/temp_uploads/
