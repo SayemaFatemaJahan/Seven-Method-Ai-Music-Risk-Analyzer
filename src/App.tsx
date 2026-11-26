@@ -173,7 +173,7 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-orange-50 flex flex-col font-sans selection:bg-orange-600 selection:text-white">
+    <div className="min-h-screen bg-white text-black flex flex-col font-sans selection:bg-orange-600 selection:text-white">
       {/* Top Bar Navigation */}
       <Header
         activeTab={activeTab === 'methods_suite' ? 'analyzer' : (activeTab === 'database' ? 'database' : 'code-lab')}
@@ -191,14 +191,12 @@ export default function App() {
         {/* Method Switcher Bar */}
         {activeTab === 'methods_suite' && (
           <div className="space-y-3">
-            <div className="flex items-center justify-between text-xs font-hud text-orange-400">
+            <div className="flex items-center justify-between text-xs font-hud text-black">
               <span className="flex items-center gap-2">
-                <span className="icon-box-black w-5 h-5 rounded bg-black text-orange-500">
-                  <Layers className="w-4 h-4" />
-                </span>
-                <span>Select 7-Signal Acoustic Method to Inspect:</span>
+                <Layers className="w-4 h-4 text-orange-600" />
+                <span className="font-bold">Select 7-Signal Acoustic Method to Inspect:</span>
               </span>
-              <span className="text-orange-400/80 hidden sm:inline">
+              <span className="text-neutral-500 hidden sm:inline">
                 Click any signal method to view its dedicated pipeline & DSP breakdown
               </span>
             </div>
@@ -212,12 +210,12 @@ export default function App() {
                     onClick={() => setSelectedMethodId(m.id)}
                     className={`px-3 py-2 rounded-lg text-xs font-hud transition-colors whitespace-nowrap shrink-0 flex items-center gap-2 ${
                       isSelected
-                        ? 'bg-black text-white font-bold border-2 border-orange-600'
-                        : 'bg-black text-orange-400 hover:text-white hover:bg-neutral-950 border border-neutral-900'
+                        ? 'bg-neutral-100 text-black font-bold border-2 border-orange-600 shadow-xs'
+                        : 'bg-white text-black hover:bg-neutral-50 border border-neutral-300'
                     }`}
                   >
                     <span>{m.label}</span>
-                    <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${isSelected ? 'bg-orange-950 text-orange-300' : 'bg-black text-orange-500'}`}>
+                    <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${isSelected ? 'bg-orange-600 text-white font-bold' : 'bg-neutral-100 text-neutral-700'}`}>
                       {m.badge}
                     </span>
                   </button>
@@ -283,17 +281,17 @@ export default function App() {
         filterEnabled={params.cakewalkKotoFilterEnabled}
       />
 
-      {/* Footer in Black & Warm Orange */}
-      <footer className="border-t border-orange-950/80 bg-black py-6 mt-12 text-center text-xs text-orange-300/60 font-hud">
+      {/* Footer in Pure White & Clean Black with Pumpkin Orange Badge */}
+      <footer className="border-t border-neutral-200 bg-white py-6 mt-12 text-center text-xs text-black font-hud">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="font-semibold text-orange-200 flex items-center gap-2">
+          <div className="font-semibold text-black flex items-center gap-2">
             <span className="koomro-logo-box text-xs py-0.5 px-2">
               <span className="koomro-logo-text text-sm">koomRo</span>
             </span>
-            <span>Seven-Method AI Music Risk Detector · Sayema Fatema Jahan (ID: 232044038)</span>
+            <span>Seven-Method AI Music Risk Detector</span>
           </div>
-          <div className="text-[11px] text-orange-400/80 font-mono">
-            Presidency University Thesis · Multi-Signal Neural Audio Processing
+          <div className="text-[11px] text-neutral-600 font-mono">
+            Multi-Signal Neural Audio Processing Architecture
           </div>
         </div>
       </footer>

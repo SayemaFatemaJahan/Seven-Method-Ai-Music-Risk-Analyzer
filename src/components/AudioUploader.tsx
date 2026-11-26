@@ -3,8 +3,8 @@
 // Author: Sayema Fatema Jahan
 // Institution: Presidency University | Student ID: 232044038
 //
-// In this component, I handle audio file upload and preset selection in my
-// deep orange on black theme, with borderless black icon boxes and orange sub-texts.
+// In this component, I handle user audio ingestion on a clean white background
+// with black text and pumpkin orange accents, forwarding to my Python backend.
 // =====================================================================
 
 import React, { useState, useRef } from 'react';
@@ -148,25 +148,23 @@ export const AudioUploader: React.FC<AudioUploaderProps> = ({
   };
 
   return (
-    <div className="bg-black border border-neutral-900 rounded-xl p-5 space-y-5">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-neutral-900">
+    <div className="bg-white border border-neutral-200 rounded-xl p-5 space-y-5 shadow-xs text-black">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-neutral-200">
         <div>
-          <h2 className="text-base font-gaming font-bold text-white flex items-center gap-2">
-            <span className="icon-box-black w-6 h-6 rounded bg-black text-orange-500">
-              <Music className="w-4 h-4" />
-            </span>
+          <h2 className="text-base font-gaming font-bold text-orange-600 flex items-center gap-2">
+            <Music className="w-4 h-4 text-orange-600" />
             <span>koomRo Audio Ingestion & Research Benchmarks</span>
           </h2>
-          <p className="text-xs text-orange-400 mt-0.5">
+          <p className="text-xs text-neutral-600 mt-0.5">
             Load original audio or benchmark false positive scenarios (e.g. Cakewalk Virtual Instrument Koto loop)
           </p>
         </div>
 
         {/* Current Active Track Metadata */}
-        <div className="flex items-center gap-2 text-xs text-orange-400 font-mono">
-          <span className="text-white font-medium truncate max-w-[160px]">{currentTrackTitle}</span>
+        <div className="flex items-center gap-2 text-xs text-neutral-800 font-mono">
+          <span className="text-black font-bold truncate max-w-[160px]">{currentTrackTitle}</span>
           <span aria-hidden="true">·</span>
-          <span className="text-orange-500 font-bold">{currentBpm} BPM</span>
+          <span className="text-orange-600 font-bold">{currentBpm} BPM</span>
           <span aria-hidden="true">·</span>
           <span>{currentKey}</span>
         </div>
@@ -174,7 +172,7 @@ export const AudioUploader: React.FC<AudioUploaderProps> = ({
 
       {/* Preset Selector Grid */}
       <div>
-        <label className="text-xs font-hud font-semibold text-orange-400 block mb-2">
+        <label className="text-xs font-hud font-bold text-black block mb-2">
           Select Research Test Track
         </label>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5">
@@ -186,24 +184,24 @@ export const AudioUploader: React.FC<AudioUploaderProps> = ({
                 onClick={() => handlePresetSelect(preset)}
                 className={`text-left p-3 rounded-lg border transition-colors ${
                   isSelected
-                    ? 'bg-black border-2 border-orange-600 text-white'
-                    : 'bg-black border border-neutral-900 text-orange-400 hover:border-neutral-700'
+                    ? 'bg-orange-50/60 border-2 border-orange-600 text-black shadow-xs'
+                    : 'bg-white border border-neutral-200 text-neutral-800 hover:border-neutral-300'
                 }`}
               >
                 <div className="flex items-start justify-between gap-2">
-                  <div className="font-semibold text-xs text-white truncate font-hud">{preset.name}</div>
+                  <div className="font-bold text-xs text-black truncate font-hud">{preset.name}</div>
                   {preset.hasCakewalkKotoLoop && (
-                    <span className="text-[10px] text-orange-400 font-mono shrink-0">
+                    <span className="text-[10px] text-orange-600 font-mono font-bold shrink-0">
                       Cakewalk Koto
                     </span>
                   )}
                 </div>
-                <div className="text-[11px] text-orange-400 mt-1 line-clamp-2 leading-relaxed">
+                <div className="text-[11px] text-neutral-600 mt-1 line-clamp-2 leading-relaxed">
                   {preset.description}
                 </div>
-                <div className="mt-2 pt-2 border-t border-neutral-900 flex items-center justify-between text-[10px] text-orange-400 font-mono">
+                <div className="mt-2 pt-2 border-t border-neutral-100 flex items-center justify-between text-[10px] text-neutral-600 font-mono">
                   <span>{preset.bpm} BPM · {preset.key}</span>
-                  <span className="text-orange-500 font-bold">Load Preset</span>
+                  <span className="text-orange-600 font-bold">Load Preset</span>
                 </div>
               </button>
             );
@@ -214,15 +212,13 @@ export const AudioUploader: React.FC<AudioUploaderProps> = ({
       {/* Direct File Upload & YouTube Input Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
         {/* Local File Upload */}
-        <div className="p-4 rounded-lg bg-black border border-neutral-900 flex flex-col justify-between">
+        <div className="p-4 rounded-lg bg-neutral-50 border border-neutral-200 flex flex-col justify-between">
           <div>
-            <div className="text-xs font-hud font-bold text-white flex items-center gap-2 mb-1">
-              <span className="icon-box-black w-6 h-6 rounded bg-black text-orange-500">
-                <Upload className="w-4 h-4" />
-              </span>
+            <div className="text-xs font-hud font-bold text-black flex items-center gap-2 mb-1">
+              <Upload className="w-4 h-4 text-orange-600" />
               <span>Upload Audio File to koomRo Engine</span>
             </div>
-            <p className="text-[11px] text-orange-400 leading-normal">
+            <p className="text-[11px] text-neutral-600 leading-normal">
               Directly decode master MP3, WAV, AAC, or OGG in your browser with Web Audio API.
             </p>
           </div>
@@ -237,24 +233,20 @@ export const AudioUploader: React.FC<AudioUploaderProps> = ({
             <button
               onClick={() => fileInputRef.current?.click()}
               disabled={isDecoding}
-              className="w-full py-2 px-3 text-xs font-hud font-bold text-white bg-orange-700 hover:bg-orange-600 rounded-lg transition-colors flex items-center justify-center gap-2"
+              className="w-full py-2 px-3 text-xs font-hud font-bold text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-xs"
             >
               {isDecoding ? (
                 <>Analyzing 7 Audio Signals...</>
               ) : (
                 <>
-                  <span className="icon-box-black w-4 h-4 rounded bg-black text-orange-400">
-                    <Upload className="w-3.5 h-3.5" />
-                  </span>
+                  <Upload className="w-3.5 h-3.5 text-white" />
                   <span>Select Audio File from Device</span>
                 </>
               )}
             </button>
             {backendStatus && (
-              <div className="text-[11px] text-orange-400 font-mono mt-2 flex items-center gap-1.5">
-                <span className="icon-box-black w-4 h-4 rounded bg-black text-orange-500">
-                  <Sparkles className="w-3 h-3" />
-                </span>
+              <div className="text-[11px] text-neutral-800 font-mono mt-2 flex items-center gap-1.5 font-semibold">
+                <Sparkles className="w-3 h-3 text-orange-600" />
                 <span>{backendStatus}</span>
               </div>
             )}
@@ -262,15 +254,13 @@ export const AudioUploader: React.FC<AudioUploaderProps> = ({
         </div>
 
         {/* YouTube Audio Stream Ingestion */}
-        <div className="p-4 rounded-lg bg-black border border-neutral-900 flex flex-col justify-between">
+        <div className="p-4 rounded-lg bg-neutral-50 border border-neutral-200 flex flex-col justify-between">
           <div>
-            <div className="text-xs font-hud font-bold text-white flex items-center gap-2 mb-1">
-              <span className="icon-box-black w-6 h-6 rounded bg-black text-orange-500">
-                <Youtube className="w-4 h-4" />
-              </span>
+            <div className="text-xs font-hud font-bold text-black flex items-center gap-2 mb-1">
+              <Youtube className="w-4 h-4 text-orange-600" />
               <span>YouTube Audio Stream Reference</span>
             </div>
-            <p className="text-[11px] text-orange-400 leading-normal">
+            <p className="text-[11px] text-neutral-600 leading-normal">
               Insert YouTube link to test against Content ID reference registry.
             </p>
           </div>
@@ -280,18 +270,18 @@ export const AudioUploader: React.FC<AudioUploaderProps> = ({
               placeholder="https://youtube.com/watch?v=..."
               value={youtubeUrlInput}
               onChange={(e) => setYoutubeUrlInput(e.target.value)}
-              className="flex-1 bg-black border border-neutral-800 text-xs px-3 py-2 rounded-lg focus:outline-none focus:border-orange-600 font-mono text-orange-200"
+              className="flex-1 bg-white border border-neutral-300 text-xs px-3 py-2 rounded-lg focus:outline-none focus:border-orange-600 font-mono text-black"
             />
             <button
               onClick={handleSimulateYoutubeExtract}
               disabled={!youtubeUrlInput.trim()}
-              className="px-3 py-2 text-xs font-hud font-bold text-white bg-neutral-900 hover:bg-orange-700 disabled:opacity-50 border border-neutral-800 rounded-lg transition-colors shrink-0"
+              className="px-3 py-2 text-xs font-hud font-bold text-white bg-orange-600 hover:bg-orange-700 disabled:opacity-50 rounded-lg transition-colors shrink-0 shadow-xs"
             >
               Analyze
             </button>
           </div>
           {youtubeStatus && (
-            <div className="text-[11px] text-orange-400 font-mono mt-1.5">
+            <div className="text-[11px] text-orange-700 font-mono mt-1.5 font-semibold">
               {youtubeStatus}
             </div>
           )}
@@ -300,15 +290,13 @@ export const AudioUploader: React.FC<AudioUploaderProps> = ({
 
       {/* Stock DAW Preset Detection Notification */}
       {hasCakewalkKotoLoop && (
-        <div className="p-3 rounded-lg bg-black border border-orange-800 flex items-start gap-3 text-xs text-orange-300">
-          <span className="icon-box-black w-5 h-5 rounded bg-black text-orange-500 shrink-0 mt-0.5">
-            <AlertCircle className="w-4 h-4" />
-          </span>
+        <div className="p-3 rounded-lg bg-orange-50 border border-orange-200 flex items-start gap-3 text-xs text-neutral-800">
+          <AlertCircle className="w-4 h-4 text-orange-600 shrink-0 mt-0.5" />
           <div className="space-y-1">
-            <div className="font-semibold text-orange-400 font-hud">
+            <div className="font-bold text-orange-700 font-hud">
               Cakewalk Koto Virtual Instrument Signature Detected
             </div>
-            <p className="text-orange-400 text-[11px] leading-relaxed">
+            <p className="text-neutral-700 text-[11px] leading-relaxed">
               This track contains the known royalty-free pentatonic Koto beat from Cakewalk. Under standard acoustic fingerprinting, this generates a <strong>28.4% false copyright match</strong>. With our <strong>Neural De-biasing Filter</strong> active, the false claim is suppressed to <strong>1%</strong>!
             </p>
           </div>
