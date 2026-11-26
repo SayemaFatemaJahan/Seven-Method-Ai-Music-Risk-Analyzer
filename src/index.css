@@ -1,23 +1,70 @@
+/* =====================================================================
+ * koomRo - Seven-Method AI Music Risk Detector
+ * Author: Sayema Fatema Jahan
+ * Institution: Presidency University | Student ID: 232044038
+ *
+ * Theme: Black background, Warm Orange accents, Light Orange & White text.
+ * Fonts: Orbitron (Gaming / Streamer title font), Chakra Petch (HUD & Stats).
+ * ===================================================================== */
+
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Rajdhani', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-gaming: 'Orbitron', sans-serif;
+  --font-hud: 'Chakra Petch', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 }
 
-/* Custom scrollbars for data tables and code inspector */
+/* Custom Gaming & Streamer text utilities */
+.font-gaming {
+  font-family: var(--font-gaming);
+}
+
+.font-hud {
+  font-family: var(--font-hud);
+}
+
+/* koomRo special logo styling: White text with black border inside a warm orange box */
+.koomro-logo-box {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #c2410c 100%);
+  border: 2px solid #fdba74;
+  box-shadow: 0 0 20px rgba(249, 115, 22, 0.45);
+  border-radius: 0.6rem;
+  padding: 0.35rem 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.koomro-logo-text {
+  font-family: var(--font-gaming);
+  color: #ffffff;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  /* Crisp black stroke / border around white letters */
+  -webkit-text-stroke: 1.8px #000000;
+  text-shadow: 
+    2px 2px 0px #000000,
+    -1px -1px 0px #000000,
+    1px -1px 0px #000000,
+    -1px 1px 0px #000000,
+    0px 3px 6px rgba(0, 0, 0, 0.8);
+}
+
+/* Warm Orange Scrollbars on Black Background */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.6);
+  background: #000000;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(51, 65, 85, 0.8);
-  border-radius: 3px;
+  background: #c2410c;
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(71, 85, 105, 1);
+  background: #f97316;
 }

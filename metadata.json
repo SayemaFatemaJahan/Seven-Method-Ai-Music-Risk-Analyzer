@@ -1,6 +1,9 @@
 {
-  "name": "Ai Music Copyright Risk Detector",
-  "description": "Advanced audio copyright risk analysis and research platform comparing Neural Audio Processing, Acoustic Fingerprinting, and Blockchain Provenance to eliminate false claims for independent artists.",
+  "name": "koomRo - Seven-Method AI Music Risk Detector",
+  "description": "Multi-Signal Neural Audio Processing system for copyright claim detection by Sayema Fatema Jahan (Presidency University, ID: 232044038).",
+  "author": "Sayema Fatema Jahan",
+  "institution": "Presidency University",
+  "studentId": "232044038",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": []
 }

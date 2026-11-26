@@ -1,3 +1,18 @@
+# =========================================================================================
+# koomRo - Seven-Method AI Music Risk Detector
+# Triplet Metric Learning Training Pipeline (GPU / CPU)
+# Author: Sayema Fatema Jahan
+# Institution: Presidency University | Student ID: 232044038
+#
+# Why I built this:
+# In my thesis, I train my 7-Signal Multi-Branch Network using Triplet Margin Loss:
+#   - Anchor: Original Master Recording
+#   - Positive: Plagiarized / Covered / Pitch-Shifted / Sampled version of the Anchor
+#   - Negative: Completely Unrelated Song
+# This teaches my network to minimize the distance between derivative works while maximizing
+# the distance to unrelated tracks.
+# =========================================================================================
+
 import os
 import glob
 import random
@@ -10,15 +25,44 @@ import librosa
 from signal_extractor import MultiSignalAudioExtractor
 from model import MultiSignalFusionNet
 
-AUDIO_DIR = os.path.join(os.path.dirname(__file__), "data", "raw_audio", "reference_tracks")
+BASE_DATA_DIR = os.path.join(os.path.dirname(__file__), "data", "raw_audio")
+ANCHOR_DIR = os.path.join(BASE_DATA_DIR, "anchors_original")
+POSITIVE_DIR = os.path.join(BASE_DATA_DIR, "positives_modified")
+NEGATIVE_DIR = os.path.join(BASE_DATA_DIR, "negatives_unrelated")
+REFERENCE_DIR = os.path.join(BASE_DATA_DIR, "reference_tracks")
 CHECKPOINT_DIR = os.path.join(os.path.dirname(__file__), "checkpoints")
+
+class ExplicitTripletDataset(Dataset):
+    """
+    I load explicitly separated audio files from my folders:
+    - anchors_original/
+    - positives_modified/
+    - negatives_unrelated/
+    """
+    def __init__(self, anchor_files, positive_files, negative_files, extractor):
+        self.anchors = anchor_files
+        self.positives = positive_files
+        self.negatives = negative_files
+        self.extractor = extractor
+
+    def __len__(self):
+        return len(self.anchors)
+
+    def __getitem__(self, idx):
+        a_path = self.anchors[idx % len(self.anchors)]
+        p_path = self.positives[idx % len(self.positives)]
+        n_path = random.choice(self.negatives)
+
+        a_sig = self.extractor.extract_all_signals(a_path)
+        p_sig = self.extractor.extract_all_signals(p_path)
+        n_sig = self.extractor.extract_all_signals(n_path)
+
+        return a_sig, p_sig, n_sig
 
 class AutoAugmentAudioDataset(Dataset):
     """
-    Automated Triplet Dataset for Copyright Detection Training:
-    - Anchor: Original audio track
-    - Positive: Synthesized plagiarized sample (pitch shifted +/- 2 semitones, time stretched, or noise injected)
-    - Negative: A completely different track from the catalog
+    If I haven't manually created modified songs, this dataset automatically synthesizes
+    plagiarized variations of my original tracks via pitch-shifting and time-stretching.
     """
     def __init__(self, audio_files, extractor, samples_per_epoch=50):
         self.audio_files = audio_files
@@ -29,23 +73,21 @@ class AutoAugmentAudioDataset(Dataset):
         return self.samples_per_epoch
 
     def _augment(self, y, sr):
-        """Applies realistic copyright-evasion augmentations."""
         choice = random.random()
         if choice < 0.33:
-            # Pitch shift (+/- 1.5 semitones)
+            # I simulate key transposition / pitch shifting (+/- 1.5 semitones)
             n_steps = random.uniform(-1.5, 1.5)
             return librosa.effects.pitch_shift(y=y, sr=sr, n_steps=n_steps)
         elif choice < 0.66:
-            # Time stretch (tempo altered by 5-10%)
+            # I simulate tempo warping (speed altered by +/- 10%)
             rate = random.uniform(0.9, 1.1)
             return librosa.effects.time_stretch(y=y, rate=rate)
         else:
-            # Add subtle acoustic background noise
+            # I inject background acoustic noise
             noise = np.random.randn(len(y)) * 0.005
             return y + noise
 
     def _extract_signals_from_waveform(self, y, sr):
-        # Trim or pad to fixed duration
         target_len = int(sr * self.extractor.duration)
         if len(y) < target_len:
             y = np.pad(y, (0, target_len - len(y)), mode='constant')
@@ -74,16 +116,13 @@ class AutoAugmentAudioDataset(Dataset):
         }
 
     def __getitem__(self, idx):
-        # 1. Pick anchor
         anchor_path = random.choice(self.audio_files)
         y_anchor, sr = librosa.load(anchor_path, sr=self.extractor.sr, mono=True, duration=self.extractor.duration)
 
-        # 2. Pick negative (must be a different song)
         other_files = [f for f in self.audio_files if f != anchor_path]
         neg_path = random.choice(other_files) if other_files else anchor_path
         y_neg, _ = librosa.load(neg_path, sr=self.extractor.sr, mono=True, duration=self.extractor.duration)
 
-        # 3. Create positive by augmenting anchor
         y_pos = self._augment(y_anchor.copy(), sr)
 
         return (
@@ -92,43 +131,65 @@ class AutoAugmentAudioDataset(Dataset):
             self._extract_signals_from_waveform(y_neg, sr)
         )
 
-def train_model(epochs=10, batch_size=4):
-    extensions = ("*.mp3", "*.wav", "*.flac", "*.ogg")
-    audio_files = []
+def get_audio_files(directory):
+    extensions = ("*.mp3", "*.wav", "*.flac", "*.ogg", "*.m4a")
+    files = []
     for ext in extensions:
-        audio_files.extend(glob.glob(os.path.join(AUDIO_DIR, ext)))
+        files.extend(glob.glob(os.path.join(directory, ext)))
+    return files
 
-    if len(audio_files) < 2:
-        print("=" * 65)
-        print("CANNOT TRAIN YET: NEED AT LEAST 2 AUDIO FILES!")
-        print(f"Drop at least 2 .mp3 or .wav songs into:\n  {AUDIO_DIR}")
-        print("Why? Training requires comparing songs against each other!")
-        print("=" * 65)
-        return
-
+def train_koomro_model(epochs=5, batch_size=2):
+    """
+    I initiate training on GPU (CUDA) or CPU.
+    """
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print("=" * 65)
-    print(f"TRAINING DEVICE: {device}")
-    if device.type == "cpu":
-        print("  (Running on CPU. Model has only 484K params, perfectly fine for CPU!)")
-    print(f"FOUND {len(audio_files)} REFERENCE TRACKS FOR TRAINING.")
-    print("=" * 65)
+    print("=" * 70)
+    print("koomRo - AI MUSIC RISK DETECTOR TRAINING PIPELINE")
+    print("Author: Sayema Fatema Jahan | Presidency University (ID: 232044038)")
+    print("=" * 70)
+    print(f"TRAINING HARDWARE: {device}")
+    if torch.cuda.is_available():
+        print(f"  GPU Name: {torch.cuda.get_device_name(0)}")
+        print(f"  CUDA Compute Capability: {torch.cuda.get_device_capability(0)}")
+    else:
+        print("  Torch running on CPU. (Lightweight 484K parameter model runs smoothly on CPU)")
 
     extractor = MultiSignalAudioExtractor()
-    dataset = AutoAugmentAudioDataset(audio_files, extractor, samples_per_epoch=20)
-    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
+    # 1. Check if user provided explicit triplet folders
+    anchors = get_audio_files(ANCHOR_DIR)
+    positives = get_audio_files(POSITIVE_DIR)
+    negatives = get_audio_files(NEGATIVE_DIR)
+    reference = get_audio_files(REFERENCE_DIR)
+
+    if anchors and positives and negatives:
+        print(f"Dataset Mode: EXPLICIT TRIPLETS FOUND ({len(anchors)} anchors, {len(positives)} positives, {len(negatives)} negatives)")
+        dataset = ExplicitTripletDataset(anchors, positives, negatives, extractor)
+    else:
+        # Fallback to pool of audio files + automatic data augmentation
+        pool = anchors + reference
+        if len(pool) < 2:
+            print("\nCANNOT TRAIN YET: Insufficient audio files found!")
+            print("Please insert audio files into either:")
+            print(f"  1. Explicit Triplet Folders:\n     - Anchors:   {ANCHOR_DIR}\n     - Positives: {POSITIVE_DIR}\n     - Negatives: {NEGATIVE_DIR}")
+            print(f"  2. Or Reference Catalog:\n     - Catalog:   {REFERENCE_DIR}")
+            print("\nDrop at least 2 .mp3 or .wav songs into any of these folders and re-run!")
+            print("=" * 70)
+            return
+
+        print(f"Dataset Mode: AUTO-AUGMENTATION on {len(pool)} available track(s)")
+        dataset = AutoAugmentAudioDataset(pool, extractor, samples_per_epoch=20)
+
+    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
     model = MultiSignalFusionNet(embedding_dim=256).to(device)
     optimizer = optim.AdamW(model.parameters(), lr=1e-4, weight_decay=1e-4)
     criterion = nn.TripletMarginLoss(margin=0.3, p=2)
 
     os.makedirs(CHECKPOINT_DIR, exist_ok=True)
-    best_loss = float("inf")
-
-    print(f"Starting training for {epochs} epochs...")
+    print(f"\nStarting {epochs} training epochs...")
     for epoch in range(1, epochs + 1):
         model.train()
-        epoch_loss = 0.0
+        total_loss = 0.0
 
         for a_batch, p_batch, n_batch in dataloader:
             optimizer.zero_grad()
@@ -144,18 +205,16 @@ def train_model(epochs=10, batch_size=4):
             loss = criterion(a_emb, p_emb, n_emb)
             loss.backward()
             optimizer.step()
-            epoch_loss += loss.item()
+            total_loss += loss.item()
 
-        avg_loss = epoch_loss / max(1, len(dataloader))
+        avg_loss = total_loss / max(1, len(dataloader))
         print(f"Epoch [{epoch}/{epochs}] - Triplet Margin Loss: {avg_loss:.4f}")
 
-        # Save checkpoint
-        checkpoint_path = os.path.join(CHECKPOINT_DIR, "best_model.pt")
-        torch.save(model.state_dict(), checkpoint_path)
-
-    print("=" * 65)
-    print(f"TRAINING COMPLETE! Model weights saved to: {checkpoint_path}")
-    print("=" * 65)
+    checkpoint_file = os.path.join(CHECKPOINT_DIR, "best_model.pt")
+    torch.save(model.state_dict(), checkpoint_file)
+    print("=" * 70)
+    print(f"TRAINING COMPLETE! Model weights saved to: {checkpoint_file}")
+    print("=" * 70)
 
 if __name__ == "__main__":
-    train_model(epochs=5, batch_size=2)
+    train_koomro_model(epochs=5, batch_size=2)

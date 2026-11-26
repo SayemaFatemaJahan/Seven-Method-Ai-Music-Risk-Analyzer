@@ -1,3 +1,13 @@
+// =====================================================================
+// koomRo - Seven-Method Audio Processing Engine
+// Author: Sayema Fatema Jahan
+// Institution: Presidency University | Student ID: 232044038
+//
+// In this engine, I simulate and execute the signal processing telemetry
+// for my 7 acoustic methods (Chroma, Mel-Spec, MFCC, Tempogram, Tonnetz,
+// Spectral Contrast, and Deep Attention Fusion).
+// =====================================================================
+
 import { MethodId, SingleMethodResult, UnifiedMultiMethodResult } from '../types/sixMethods';
 import { METHOD_DESCRIPTORS } from '../data/methodDescriptors';
 

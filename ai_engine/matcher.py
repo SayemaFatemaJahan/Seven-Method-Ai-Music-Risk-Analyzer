@@ -1,3 +1,15 @@
+# =========================================================================================
+# koomRo - Seven-Method AI Music Risk Detector
+# Metric Learning Similarity Matcher & Platform Risk Evaluator
+# Author: Sayema Fatema Jahan
+# Institution: Presidency University | Student ID: 232044038
+#
+# Why I built this:
+# In my thesis, I calculate cosine similarities between query embeddings and catalog embeddings.
+# I translate mathematical distances into 0% - 100% risk percentages for YouTube Content ID
+# and music distribution strikes.
+# =========================================================================================
+
 import os
 import json
 import numpy as np
@@ -10,6 +22,7 @@ DATA_DIR = os.path.join(os.path.dirname(__file__), "data", "precomputed")
 
 class MusicCopyrightRiskDetector:
     def __init__(self, model_weights_path=None):
+        # I automatically select CUDA GPU if available; otherwise I gracefully fallback to CPU
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.extractor = MultiSignalAudioExtractor()
         self.model = MultiSignalFusionNet().to(self.device)
@@ -17,12 +30,12 @@ class MusicCopyrightRiskDetector:
             self.model.load_state_dict(torch.load(model_weights_path, map_location=self.device))
         self.model.eval()
 
-        # Load precomputed database if exists
         self.catalog_embeddings = None
         self.catalog_metadata = []
         self._load_catalog()
 
     def _load_catalog(self):
+        """I load precomputed 256-D vectors from disk for sub-millisecond similarity queries."""
         emb_file = os.path.join(DATA_DIR, "embeddings.npy")
         meta_file = os.path.join(DATA_DIR, "catalog_metadata.json")
         if os.path.exists(emb_file) and os.path.exists(meta_file):
@@ -30,9 +43,9 @@ class MusicCopyrightRiskDetector:
                 self.catalog_embeddings = torch.tensor(np.load(emb_file), dtype=torch.float32).to(self.device)
                 with open(meta_file, "r", encoding="utf-8") as f:
                     self.catalog_metadata = json.load(f)
-                print(f"[Detector] Loaded {len(self.catalog_metadata)} catalog embeddings from database.")
+                print(f"[koomRo Detector] Loaded {len(self.catalog_metadata)} catalog embeddings from database.")
             except Exception as e:
-                print(f"[Detector] Could not load precomputed database: {e}")
+                print(f"[koomRo Detector] Notice: Precomputed database not loaded: {e}")
 
     def get_track_features(self, audio_path):
         signals = self.extractor.extract_all_signals(audio_path)
@@ -44,17 +57,15 @@ class MusicCopyrightRiskDetector:
 
     def match_against_catalog(self, query_audio_path):
         """
-        Extracts 7 signals from query audio and searches across the indexed catalog
-        in milliseconds using matrix cosine similarity.
+        I extract 7 signals from the query audio and search across my reference catalog
+        in milliseconds using vectorized matrix cosine similarity.
         """
-        # Reload catalog in case new files were indexed
         if self.catalog_embeddings is None:
             self._load_catalog()
 
         query_out = self.get_track_features(query_audio_path)
         q_embed = query_out["master_embedding"]
 
-        # If catalog is indexed, search against all reference tracks
         if self.catalog_embeddings is not None and len(self.catalog_embeddings) > 0:
             sims = F.cosine_similarity(q_embed, self.catalog_embeddings)
             best_idx = torch.argmax(sims).item()
@@ -63,11 +74,9 @@ class MusicCopyrightRiskDetector:
             overall_risk = round(highest_sim * 100.0, 2)
             matched_title = matched_track.get("title", "Unknown Reference Track")
         else:
-            # Fallback when catalog has no audio indexed yet
             matched_title = "Self-Scan (Catalog Empty - Run index_catalog.py)"
             overall_risk = 0.0
 
-        q_b = query_out["branch_embeddings"]
         return {
             "query_file": os.path.basename(query_audio_path),
             "top_matched_catalog_track": matched_title,
@@ -85,6 +94,7 @@ class MusicCopyrightRiskDetector:
         }
 
     def calculate_risk(self, query_audio_path, reference_audio_path):
+        """I compare two specific audio tracks directly and calculate exact sub-signal risks."""
         query_out = self.get_track_features(query_audio_path)
         ref_out = self.get_track_features(reference_audio_path)
 
@@ -113,4 +123,4 @@ class MusicCopyrightRiskDetector:
 
 if __name__ == "__main__":
     detector = MusicCopyrightRiskDetector()
-    print("Multi-Signal Risk Detector loaded successfully on:", detector.device)
+    print("koomRo Multi-Signal Risk Detector loaded successfully on:", detector.device)

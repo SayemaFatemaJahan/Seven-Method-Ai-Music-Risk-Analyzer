@@ -1,9 +1,24 @@
+# =========================================================================================
+# koomRo - Seven-Method AI Music Risk Detector
+# Method 7: Multi-Branch Deep Attention Fusion Network (PyTorch)
+# Author: Sayema Fatema Jahan
+# Institution: Presidency University | Student ID: 232044038
+#
+# Why I built this:
+# In my thesis, I developed this deep neural architecture to combine all 6 acoustic signal
+# branches using multi-head self-attention. It projects signals into a 256-dimensional
+# metric embedding space to calculate calibrated copyright risk percentages.
+# =========================================================================================
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
 class SignalCNNBranch(nn.Module):
-    """Convolutional sub-network to extract deep features from a 2D time-frequency signal."""
+    """
+    I designed this convolutional sub-network to extract deep acoustic features
+    from 2D time-frequency signal representations.
+    """
     def __init__(self, in_channels=1, feature_dim=64):
         super(SignalCNNBranch, self).__init__()
         self.conv1 = nn.Conv2d(in_channels, 32, kernel_size=3, padding=1)
@@ -24,14 +39,14 @@ class SignalCNNBranch(nn.Module):
 
 class MultiSignalFusionNet(nn.Module):
     """
-    Method 7: Deep Multi-Signal Fusion Network
-    Takes 6 acoustic signals, runs them in parallel through 6 feature extractors,
-    and fuses them using self-attention into a unified copyright embedding.
+    Method 7: My Master Multi-Signal Attention Fusion Network (koomRo)
+    I feed 6 acoustic signals through 6 dedicated parallel CNN branches,
+    and fuse them via multi-head self-attention.
     """
     def __init__(self, embedding_dim=256):
         super(MultiSignalFusionNet, self).__init__()
         
-        # 6 Dedicated neural branches
+        # I allocate 6 dedicated neural branches for each acoustic domain
         self.chroma_branch = SignalCNNBranch(1, feature_dim=64)     # Melody / Pitch
         self.mel_branch = SignalCNNBranch(1, feature_dim=64)        # Perceptual Spectrum
         self.mfcc_branch = SignalCNNBranch(1, feature_dim=64)       # Timbre / Vocal
@@ -39,10 +54,10 @@ class MultiSignalFusionNet(nn.Module):
         self.tonnetz_branch = SignalCNNBranch(1, feature_dim=64)    # Tonal Space
         self.contrast_branch = SignalCNNBranch(1, feature_dim=64)   # Spectral Texture
 
-        # Self-Attention across the 6 sub-signal embeddings
+        # I use multi-head self-attention to dynamically weigh the importance of each signal
         self.attention = nn.MultiheadAttention(embed_dim=64, num_heads=4, batch_first=True)
         
-        # Final Projection Head into unified metric embedding space
+        # I project the fused representations into a unified 256-D metric space
         self.projection_head = nn.Sequential(
             nn.Linear(64 * 6, 512),
             nn.ReLU(),
@@ -51,7 +66,7 @@ class MultiSignalFusionNet(nn.Module):
         )
 
     def forward(self, signals):
-        # Pass each signal through its respective branch
+        # I compute branch embeddings for each signal
         e_chroma = self.chroma_branch(signals["chroma"])
         e_mel = self.mel_branch(signals["mel_spec"])
         e_mfcc = self.mfcc_branch(signals["mfcc"])
@@ -59,17 +74,17 @@ class MultiSignalFusionNet(nn.Module):
         e_tonnetz = self.tonnetz_branch(signals["tonnetz"])
         e_contrast = self.contrast_branch(signals["contrast"])
 
-        # Stack into sequence of 6 signal vectors: (Batch, 6, 64)
+        # I stack the 6 signal tokens: (Batch, 6, 64)
         signal_tokens = torch.stack([e_chroma, e_mel, e_mfcc, e_tempo, e_tonnetz, e_contrast], dim=1)
 
-        # Apply multi-signal attention
+        # I apply self-attention across all signals
         attn_out, _ = self.attention(signal_tokens, signal_tokens, signal_tokens)
         
-        # Flatten and project to final master embedding
+        # I flatten and project to my master embedding
         flattened = attn_out.reshape(attn_out.size(0), -1)
         master_embedding = self.projection_head(flattened)
         
-        # L2-normalize master embedding for cosine distance matching
+        # I L2-normalize the output vector to enable fast Cosine Similarity retrieval
         master_embedding = F.normalize(master_embedding, p=2, dim=1)
         
         return {

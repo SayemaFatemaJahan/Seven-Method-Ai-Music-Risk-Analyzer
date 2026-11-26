@@ -1,7 +1,14 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
+// =====================================================================
+// koomRo - Seven-Method AI Music Risk Detector
+// Main Dashboard Application
+// Author: Sayema Fatema Jahan
+// Institution: Presidency University | Student ID: 232044038
+//
+// In this main dashboard, I orchestrate the user interaction for my thesis:
+// "Development of AI-Based Copyright Music Claim Detection System Using
+// Multi-Signal Neural Audio Processing". I enable independent artists to upload
+// songs, evaluate 7 acoustic signal pipelines, and preview strike risks.
+// =====================================================================
 
 import React, { useState, useMemo } from 'react';
 import { Header } from './components/Header';
@@ -71,7 +78,7 @@ export default function App() {
     return runCopyrightRiskAnalysis(input);
   }, [trackTitle, artist, bpm, key, durationSeconds, hasCakewalkKotoLoop, sampleType, detectionMethod, params]);
 
-  // Unified Multi-Method Simulation Output (for 7th website)
+  // Unified Multi-Signal Simulation Output (for 7th master method)
   const unifiedSevenMethodResult = useMemo(() => {
     return executeUnifiedSevenMethods({
       trackTitle,
@@ -154,18 +161,19 @@ export default function App() {
     setActiveTab('methods_suite');
   };
 
+  // My 7-Signal Research Methods
   const methodTabs = [
-    { id: 'method7_unified' as MethodId, label: '7. Multi-Method (Unified 6 Segments)', badge: 'Master Suite' },
-    { id: 'method1' as MethodId, label: '1. AcousticPulse PyBridge', badge: 'FastAPI + React' },
-    { id: 'method2' as MethodId, label: '2. BrowserSonic JS', badge: 'Pure Web Audio' },
-    { id: 'method3' as MethodId, label: '3. SoundVault Hybrid', badge: 'FastAPI + PostgreSQL' },
-    { id: 'method4' as MethodId, label: '4. RuleHarmonic DSP', badge: 'Rules (No AI)' },
-    { id: 'method5' as MethodId, label: '5. FeatureNet ML', badge: 'Random Forest & SVM' },
-    { id: 'method6' as MethodId, label: '6. DeepSpectra AI', badge: '2D Mel-CNN & Bi-LSTM' },
+    { id: 'method7_unified' as MethodId, label: '7. Multi-Signal Attention Fusion', badge: 'Master Suite' },
+    { id: 'method1' as MethodId, label: '1. Chroma CQT Harmonic', badge: 'Melody & Chords' },
+    { id: 'method2' as MethodId, label: '2. Log-Mel Spectrogram', badge: 'Time-Frequency' },
+    { id: 'method3' as MethodId, label: '3. MFCC Timbre Discriminator', badge: 'Vocal / Stem' },
+    { id: 'method4' as MethodId, label: '4. Tempogram Metric', badge: 'Rhythm & Beats' },
+    { id: 'method5' as MethodId, label: '5. Tonnetz Centroid', badge: 'Tonal Space' },
+    { id: 'method6' as MethodId, label: '6. Spectral Contrast', badge: 'Acoustic Texture' },
   ];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen bg-black text-orange-50 flex flex-col font-sans selection:bg-orange-600 selection:text-white">
       {/* Top Bar Navigation */}
       <Header
         activeTab={activeTab === 'methods_suite' ? 'analyzer' : (activeTab === 'database' ? 'database' : 'code-lab')}
@@ -180,16 +188,16 @@ export default function App() {
       {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         
-        {/* Method Website Switcher Bar */}
+        {/* Method Switcher Bar */}
         {activeTab === 'methods_suite' && (
           <div className="space-y-3">
-            <div className="flex items-center justify-between text-xs font-mono text-slate-400">
+            <div className="flex items-center justify-between text-xs font-mono text-orange-300/80">
               <span className="flex items-center gap-2">
-                <Layers className="w-3.5 h-3.5 text-indigo-400" />
-                Select Website Architecture & Method View:
+                <Layers className="w-3.5 h-3.5 text-orange-400" />
+                Select 7-Signal Acoustic Method to Inspect:
               </span>
-              <span className="text-slate-500 hidden sm:inline">
-                Click any method to view its standalone website & complete source code
+              <span className="text-orange-400/60 hidden sm:inline">
+                Click any signal method to view its dedicated pipeline & DSP breakdown
               </span>
             </div>
 
@@ -200,14 +208,14 @@ export default function App() {
                   <button
                     key={m.id}
                     onClick={() => setSelectedMethodId(m.id)}
-                    className={`px-3 py-2 rounded-lg text-xs font-medium transition-all whitespace-nowrap shrink-0 flex items-center gap-2 ${
+                    className={`px-3 py-2 rounded-lg text-xs font-hud transition-all whitespace-nowrap shrink-0 flex items-center gap-2 ${
                       isSelected
-                        ? 'bg-indigo-600 text-white shadow-sm font-semibold'
-                        : 'bg-slate-900 text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-800'
+                        ? 'bg-gradient-to-r from-orange-600 to-amber-600 text-white font-bold shadow-[0_0_15px_rgba(249,115,22,0.4)] border border-orange-400'
+                        : 'bg-black text-orange-200/70 hover:text-white hover:bg-orange-950/40 border border-orange-950/80'
                     }`}
                   >
                     <span>{m.label}</span>
-                    <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${isSelected ? 'bg-indigo-950 text-indigo-200' : 'bg-slate-950 text-slate-400'}`}>
+                    <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${isSelected ? 'bg-black/60 text-orange-200 border border-orange-400/40' : 'bg-orange-950/40 text-orange-400'}`}>
                       {m.badge}
                     </span>
                   </button>
@@ -217,7 +225,7 @@ export default function App() {
           </div>
         )}
 
-        {/* View 1: 7th Unified Multi-Method Master Suite */}
+        {/* View 1: 7th Unified Multi-Signal Master Suite */}
         {activeTab === 'methods_suite' && selectedMethodId === 'method7_unified' && (
           <UnifiedSevenMethodView
             trackTitle={trackTitle}
@@ -231,7 +239,7 @@ export default function App() {
           />
         )}
 
-        {/* View 2: Standalone Website Views for Methods 1 through 6 */}
+        {/* View 2: Standalone Views for Signals 1 through 6 */}
         {activeTab === 'methods_suite' && selectedMethodId !== 'method7_unified' && (
           <MethodWebsiteView
             methodId={selectedMethodId}
@@ -273,14 +281,17 @@ export default function App() {
         filterEnabled={params.cakewalkKotoFilterEnabled}
       />
 
-      {/* Footer */}
-      <footer className="border-t border-slate-900 bg-slate-950 py-6 mt-12 text-center text-xs text-slate-500">
+      {/* Footer in Black & Warm Orange */}
+      <footer className="border-t border-orange-950/80 bg-black py-6 mt-12 text-center text-xs text-orange-300/60 font-hud">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="font-medium text-slate-400">
-            Multi-Method Ai music analyzer with 6 methods · Independent Music Distribution Research
+          <div className="font-semibold text-orange-200 flex items-center gap-2">
+            <span className="koomro-logo-box text-xs py-0.5 px-2">
+              <span className="koomro-logo-text text-sm">koomRo</span>
+            </span>
+            <span>Seven-Method AI Music Risk Detector · Sayema Fatema Jahan (ID: 232044038)</span>
           </div>
-          <div className="text-[11px] text-slate-500 font-mono">
-            Evaluating 6 Distinct Architectures (FastAPI, Pure JS, PostgreSQL Hybrid, Rules, Random Forest/SVM, and 2D Mel-CNN)
+          <div className="text-[11px] text-orange-400/80 font-mono">
+            Presidency University Thesis · Multi-Signal Neural Audio Processing
           </div>
         </div>
       </footer>
