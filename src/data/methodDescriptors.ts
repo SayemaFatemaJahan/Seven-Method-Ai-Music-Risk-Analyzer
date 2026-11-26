@@ -1,4 +1,4 @@
-import { MethodDescriptor } from '../types/sixMethods';
+import { MethodDescriptor } from '../types/sevenMethods';
 
 export const METHOD_DESCRIPTORS: Record<string, MethodDescriptor> = {
   method1: {

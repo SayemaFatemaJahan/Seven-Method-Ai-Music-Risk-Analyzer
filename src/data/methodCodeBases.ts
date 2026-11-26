@@ -1,4 +1,4 @@
-import { MethodCodePackage } from '../types/sixMethods';
+import { MethodCodePackage } from '../types/sevenMethods';
 
 export const METHOD_CODE_PACKAGES: Record<string, MethodCodePackage> = {
   method1: {

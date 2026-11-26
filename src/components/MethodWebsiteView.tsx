@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MethodId, SingleMethodResult } from '../types/sixMethods';
+import { MethodId, SingleMethodResult } from '../types/sevenMethods';
 import { METHOD_DESCRIPTORS } from '../data/methodDescriptors';
 import { METHOD_CODE_PACKAGES } from '../data/methodCodeBases';
 import { Code, Play, Pause, Activity, ShieldCheck, AlertCircle, Copy, Check, Terminal, ExternalLink, Zap } from 'lucide-react';

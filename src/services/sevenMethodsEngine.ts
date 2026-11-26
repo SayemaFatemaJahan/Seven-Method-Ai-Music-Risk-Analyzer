@@ -8,7 +8,7 @@
 // Spectral Contrast, and Deep Attention Fusion).
 // =====================================================================
 
-import { MethodId, SingleMethodResult, UnifiedMultiMethodResult } from '../types/sixMethods';
+import { MethodId, SingleMethodResult, UnifiedMultiMethodResult } from '../types/sevenMethods';
 import { METHOD_DESCRIPTORS } from '../data/methodDescriptors';
 
 export interface MethodRunnerInput {

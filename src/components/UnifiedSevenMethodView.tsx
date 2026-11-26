@@ -10,7 +10,7 @@
 // =====================================================================
 
 import React, { useState } from 'react';
-import { UnifiedMultiMethodResult, MethodId } from '../types/sixMethods';
+import { UnifiedMultiMethodResult, MethodId } from '../types/sevenMethods';
 import { METHOD_DESCRIPTORS } from '../data/methodDescriptors';
 import { Cpu, Play, Pause, AlertTriangle, CheckCircle2, Sliders, ShieldCheck, ArrowRight, Activity, Terminal } from 'lucide-react';
 import { audioEngine } from '../services/audioEngine';

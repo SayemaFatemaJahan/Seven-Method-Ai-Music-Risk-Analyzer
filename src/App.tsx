@@ -23,11 +23,11 @@ import { MethodWebsiteView } from './components/MethodWebsiteView';
 import { UnifiedSevenMethodView } from './components/UnifiedSevenMethodView';
 
 import { BangladeshiSong, DetectionMethod, AlgorithmParams } from './types/music';
-import { MethodId } from './types/sixMethods';
+import { MethodId } from './types/sevenMethods';
 import { BANGALORE_CATALOG_1000 } from './data/bangladeshiSongs1000';
 import { RESEARCH_TEST_PRESETS } from './data/testPresets';
 import { runCopyrightRiskAnalysis, AnalyzerInput } from './services/analyzerLogic';
-import { executeMethodSimulation, executeUnifiedSevenMethods } from './services/sixMethodsEngine';
+import { executeMethodSimulation, executeUnifiedSevenMethods } from './services/sevenMethodsEngine';
 import { audioEngine } from './services/audioEngine';
 import { Layers, Cpu, Sparkles } from 'lucide-react';
 

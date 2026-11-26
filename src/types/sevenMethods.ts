@@ -1,3 +1,18 @@
+// =====================================================================
+// koomRo - Seven-Method Audio Processing Type Definitions
+// Author: Sayema Fatema Jahan
+// Institution: Presidency University | Student ID: 232044038
+//
+// In this file, I define the TypeScript interfaces for my 7 acoustic methods:
+// 1. Chroma CQT Harmonic Analyzer
+// 2. Log-Mel Spectrogram Neural Stream
+// 3. MFCC Timbral Stem Discriminator
+// 4. Tempogram & Metric Onset Analyzer
+// 5. Tonnetz Tonal Centroid Mapper
+// 6. Spectral Contrast & Texture Stream
+// 7. Multi-Signal Deep Attention Fusion
+// =====================================================================
+
 export type MethodId = 'method1' | 'method2' | 'method3' | 'method4' | 'method5' | 'method6' | 'method7_unified';
 
 export interface MethodDescriptor {
