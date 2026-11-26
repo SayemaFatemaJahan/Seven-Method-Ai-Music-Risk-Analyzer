@@ -191,12 +191,14 @@ export default function App() {
         {/* Method Switcher Bar */}
         {activeTab === 'methods_suite' && (
           <div className="space-y-3">
-            <div className="flex items-center justify-between text-xs font-mono text-orange-300/80">
+            <div className="flex items-center justify-between text-xs font-hud text-orange-400">
               <span className="flex items-center gap-2">
-                <Layers className="w-3.5 h-3.5 text-orange-400" />
-                Select 7-Signal Acoustic Method to Inspect:
+                <span className="icon-box-black w-5 h-5 rounded bg-black text-orange-500">
+                  <Layers className="w-4 h-4" />
+                </span>
+                <span>Select 7-Signal Acoustic Method to Inspect:</span>
               </span>
-              <span className="text-orange-400/60 hidden sm:inline">
+              <span className="text-orange-400/80 hidden sm:inline">
                 Click any signal method to view its dedicated pipeline & DSP breakdown
               </span>
             </div>
@@ -208,14 +210,14 @@ export default function App() {
                   <button
                     key={m.id}
                     onClick={() => setSelectedMethodId(m.id)}
-                    className={`px-3 py-2 rounded-lg text-xs font-hud transition-all whitespace-nowrap shrink-0 flex items-center gap-2 ${
+                    className={`px-3 py-2 rounded-lg text-xs font-hud transition-colors whitespace-nowrap shrink-0 flex items-center gap-2 ${
                       isSelected
-                        ? 'bg-gradient-to-r from-orange-600 to-amber-600 text-white font-bold shadow-[0_0_15px_rgba(249,115,22,0.4)] border border-orange-400'
-                        : 'bg-black text-orange-200/70 hover:text-white hover:bg-orange-950/40 border border-orange-950/80'
+                        ? 'bg-black text-white font-bold border-2 border-orange-600'
+                        : 'bg-black text-orange-400 hover:text-white hover:bg-neutral-950 border border-neutral-900'
                     }`}
                   >
                     <span>{m.label}</span>
-                    <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${isSelected ? 'bg-black/60 text-orange-200 border border-orange-400/40' : 'bg-orange-950/40 text-orange-400'}`}>
+                    <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${isSelected ? 'bg-orange-950 text-orange-300' : 'bg-black text-orange-500'}`}>
                       {m.badge}
                     </span>
                   </button>
